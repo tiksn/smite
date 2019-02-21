@@ -6,4 +6,6 @@ type FieldType =
     | RealType
     | BooleanType
 
-type FieldDefinition = {Name: string; Type: FieldType}
+type FieldDefinition = { Name: string; Type: FieldType }
+
+type ModelDefinition = { Namespace: string[]; Fields: FieldDefinition[] }
