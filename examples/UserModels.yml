@@ -1,0 +1,38 @@
+---
+namespace:
+  - Microsoft
+  - Graph
+  - Users
+models:
+  - name: GraphUser
+    fields:
+      - name: ID
+        type: integer
+      - name: FirstName
+        type: string
+      - name: LastName
+        type: string
+...
+---
+namespace:
+  - Microsoft
+  - Graph
+  - Documents
+models:
+  - name: Document
+    fields:
+      - name: ID
+        type: integer
+      - name: UserID
+        type: integer
+      - name: ContentHash
+        type: string
+  - name: DocumentRetrievalStatistics
+    fields:
+      - name: ID
+        type: integer
+      - name: DocumentID
+        type: integer
+      - name: MeanDailyRetrievalCount
+        type: real
+...
