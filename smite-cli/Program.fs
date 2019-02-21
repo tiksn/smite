@@ -34,7 +34,6 @@ let main argv =
     let parser = ArgumentParser.Create<CLIArguments>(programName = "smite-cli.dll")
     try
         let results =  parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
-        let all = results.GetAllResults()
         let inputFilePath = results.GetResult(Input_File)
         let outputFolderPath = results.GetResult(Output_Folder)
         let lang = results.GetResult(Lang)
