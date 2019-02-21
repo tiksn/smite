@@ -37,10 +37,12 @@ let main argv =
         let all = results.GetAllResults()
         let inputFilePath = results.GetResult(Input_File)
         let outputFolderPath = results.GetResult(Output_Folder)
+        let lang = results.GetResult(Lang)
+        let langName = lang.ToString()
         let inputFileAbsolutePath = Path.GetFullPath(inputFilePath)
         let outputFolderAbsolutePath = Path.GetFullPath(outputFolderPath)
         printfn "Reading models definitions from %s" inputFileAbsolutePath
-        printfn "Writing models source files into %s" outputFolderAbsolutePath
+        printfn "Writing models %s source files into %s" langName outputFolderAbsolutePath
         0
     with e ->
         printfn "%s" e.Message
