@@ -4,6 +4,8 @@ open Argu
 open TIKSN.smite.cli
 open TIKSN.Time
 open Microsoft.Extensions.DependencyInjection
+open System
+open System.IO
 
 type SupportedProgrammingLanguage =
     | FSharp = 1
@@ -11,11 +13,15 @@ type SupportedProgrammingLanguage =
     | TypeScript = 3
 
 type CLIArguments =
-    | Lang of SupportedProgrammingLanguage
+    | [<Mandatory>] Input_File of string
+    | [<Mandatory>] Output_Folder of string
+    | [<Mandatory>] Lang of SupportedProgrammingLanguage
 with
     interface IArgParserTemplate with
         member s.Usage =
             match s with
+            | Input_File _ -> "Input YAML file"
+            | Output_Folder _ -> "Output Folder for model sources files to be generated in."
             | Lang _ -> "Supported Programming Language"
 
 [<EntryPoint>]
@@ -29,6 +35,12 @@ let main argv =
     try
         let results =  parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
         let all = results.GetAllResults()
+        let inputFilePath = results.GetResult(Input_File)
+        let outputFolderPath = results.GetResult(Output_Folder)
+        let inputFileAbsolutePath = Path.GetFullPath(inputFilePath)
+        let outputFolderAbsolutePath = Path.GetFullPath(outputFolderPath)
+        printfn "Reading models definitions from %s" inputFileAbsolutePath
+        printfn "Writing models source files into %s" outputFolderAbsolutePath
         0
     with e ->
         printfn "%s" e.Message

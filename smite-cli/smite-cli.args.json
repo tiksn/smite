@@ -9,6 +9,14 @@
     {
       "Id": "944d0f49-e68b-4ab0-bab9-c995ee0aa862",
       "Command": "--invalid-param"
+    },
+    {
+      "Id": "d9fbba8f-3dca-4a39-a0a6-4898c786429d",
+      "Command": "--input-file ..\\..\\..\\..\\examples\\MicrosoftGraphModels.yml"
+    },
+    {
+      "Id": "0c8b8b15-7238-4947-b1df-4cdf508d6e54",
+      "Command": "--output-folder ..\\..\\..\\..\\.trash\\models"
     }
   ]
 }
