@@ -1,6 +1,9 @@
 ﻿namespace TIKSN.smite.lib
 
-type SupportedType =
+type FieldType =
     | IntegerType
     | StringType
     | RealType
+    | BooleanType
+
+type FieldDefinition = {Name: string; Type: FieldType}
