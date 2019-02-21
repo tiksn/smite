@@ -2,6 +2,8 @@
 open System
 open Argu
 open TIKSN.smite.cli
+open TIKSN.Time
+open Microsoft.Extensions.DependencyInjection
 
 type SupportedProgrammingLanguage =
     | FSharp = 1
@@ -22,6 +24,7 @@ let main argv =
     let configurationRoot = configurationRootSetup.GetConfigurationRoot();
     let compositionRootSetup = new CompositionRootSetup(configurationRoot)
     let serviceProvider = compositionRootSetup.CreateServiceProvider()
+    let timeProvider = serviceProvider.GetRequiredService<ITimeProvider>()
     let parser = ArgumentParser.Create<CLIArguments>(programName = "smite-cli.dll")
     try
         let results =  parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
