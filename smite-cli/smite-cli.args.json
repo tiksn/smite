@@ -1,0 +1,14 @@
+{
+  "FileVersion": 2,
+  "Id": "cfeaaaa7-9ef3-41c5-8b0c-258d151101f1",
+  "Items": [
+    {
+      "Id": "30a5464f-955d-490e-91ae-c6958bed2fb8",
+      "Command": "--lang csharp"
+    },
+    {
+      "Id": "944d0f49-e68b-4ab0-bab9-c995ee0aa862",
+      "Command": "--invalid-param"
+    }
+  ]
+}
