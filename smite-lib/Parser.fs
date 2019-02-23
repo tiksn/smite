@@ -6,24 +6,35 @@ module Parser =
     open YamlDotNet.RepresentationModel
     open System
 
-    let parseModelYamlRootElement (rootNode: YamlMappingNode) =
-        let ns = rootNode.Children.[new YamlScalarNode("namespace")]
-        let models = rootNode.Children.[new YamlScalarNode("models")]
-
-        let nsSeq = match ns with
+    let getSequenceNode(node: YamlNode) =
+        match node with
         | :? YamlSequenceNode as yamlSequenceNode -> yamlSequenceNode
-        | _ -> raise (FormatException("Node 'namespace' must be sequence"))
+        | _ -> raise (FormatException("Node must be sequence node."))
 
-        let nsArray = nsSeq |> Seq.map (fun x -> x.ToString()) |> Seq.toArray
+    let getMappingNode(node: YamlNode) =
+        match node with
+        | :? YamlMappingNode as yamlMappingNode -> yamlMappingNode
+        | _ -> raise (FormatException("Node must be mapping node."))
 
-        Console.WriteLine(ns.NodeType)
-        Console.WriteLine(models.NodeType)
+    let getScalarNode(node: YamlNode) =
+        match node with
+        | :? YamlScalarNode as yamlScalarNode -> yamlScalarNode
+        | _ -> raise (FormatException("Node must be scalar node."))
+
+    let parseModelSequence(modelNode: YamlMappingNode) =
+        let nameNode = getScalarNode(modelNode.Children.[new YamlScalarNode("name")]).Value
+        0
+
+    let parseYamlRootElement (rootNode: YamlMappingNode) =
+        let nsNode = getSequenceNode(rootNode.Children.[new YamlScalarNode("namespace")])
+        let modelsNode = getSequenceNode(rootNode.Children.[new YamlScalarNode("models")])
+
+        let nsArray = nsNode |> Seq.map getScalarNode |> Seq.map (fun x -> x.Value) |> Seq.toArray
+
+        let modelsArray = modelsNode.Children |> Seq.map getMappingNode |> Seq.map (fun x -> parseModelSequence(x)) |> Seq.toArray
+
+        Console.WriteLine(modelsNode.NodeType)
         ()
-
-    let parseModelYamlDocument (document: YamlDocument) =
-        match document.RootNode with
-        | :? YamlMappingNode as mappingNode -> parseModelYamlRootElement(mappingNode)
-        | _ -> raise (FormatException("Document's root element must be mapping node."))
 
     let parseModelYaml fileName =
         let yaml = File.ReadAllText fileName
@@ -31,4 +42,5 @@ module Parser =
         let stream = YamlStream()
         stream.Load(reader)
         stream.Documents
-        |> Seq.iter parseModelYamlDocument
+        |> Seq.map (fun x -> getMappingNode(x.RootNode))
+        |> Seq.iter parseYamlRootElement
