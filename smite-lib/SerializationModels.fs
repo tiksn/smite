@@ -8,4 +8,6 @@ type FieldType =
 
 type FieldDefinition = { Name: string; Type: FieldType }
 
-type ModelDefinition = { Namespace: string[]; Fields: FieldDefinition[] }
+type ModelDefinition = { Name: string; Fields: FieldDefinition[] }
+
+type NamespaceDefinition = { Namespace: string[]; Models: ModelDefinition[] }

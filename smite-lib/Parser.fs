@@ -21,20 +21,29 @@ module Parser =
         | :? YamlScalarNode as yamlScalarNode -> yamlScalarNode
         | _ -> raise (FormatException("Node must be scalar node."))
 
+    let parseModelFieldNode(fieldNode: YamlMappingNode) =
+        let nameValue = getScalarNode(fieldNode.Children.[new YamlScalarNode("name")]).Value
+        let typeValue = getScalarNode(fieldNode.Children.[new YamlScalarNode("type")]).Value
+        let typeEnum = match typeValue with
+        | "integer" -> FieldType.IntegerType
+        | "boolean" -> FieldType.BooleanType
+        | "real" -> FieldType.RealType
+        | "string" -> FieldType.StringType
+        | _ -> raise(FormatException("Unknown format type"))
+        {Name=nameValue; Type=typeEnum}
+
     let parseModelSequence(modelNode: YamlMappingNode) =
-        let nameNode = getScalarNode(modelNode.Children.[new YamlScalarNode("name")]).Value
-        0
+        let nameValue = getScalarNode(modelNode.Children.[new YamlScalarNode("name")]).Value
+        let fieldsNodeChildren = getSequenceNode(modelNode.Children.[new YamlScalarNode("fields")]).Children
+        let fields = fieldsNodeChildren |> Seq.map getMappingNode |> Seq.map (fun x -> parseModelFieldNode(x)) |> Seq.toArray
+        {Name=nameValue; Fields=fields}
 
     let parseYamlRootElement (rootNode: YamlMappingNode) =
         let nsNode = getSequenceNode(rootNode.Children.[new YamlScalarNode("namespace")])
         let modelsNode = getSequenceNode(rootNode.Children.[new YamlScalarNode("models")])
-
         let nsArray = nsNode |> Seq.map getScalarNode |> Seq.map (fun x -> x.Value) |> Seq.toArray
-
         let modelsArray = modelsNode.Children |> Seq.map getMappingNode |> Seq.map (fun x -> parseModelSequence(x)) |> Seq.toArray
-
-        Console.WriteLine(modelsNode.NodeType)
-        ()
+        {Namespace=nsArray; Models=modelsArray}
 
     let parseModelYaml fileName =
         let yaml = File.ReadAllText fileName
@@ -43,4 +52,4 @@ module Parser =
         stream.Load(reader)
         stream.Documents
         |> Seq.map (fun x -> getMappingNode(x.RootNode))
-        |> Seq.iter parseYamlRootElement
+        |> Seq.map parseYamlRootElement
