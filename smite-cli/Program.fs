@@ -1,11 +1,10 @@
 ﻿
-open System
 open Argu
 open TIKSN.smite.cli
 open TIKSN.Time
 open Microsoft.Extensions.DependencyInjection
-open System
 open System.IO
+open TIKSN.smite.lib
 
 type SupportedProgrammingLanguage =
     | FSharp = 1
@@ -41,6 +40,7 @@ let main argv =
         let inputFileAbsolutePath = Path.GetFullPath(inputFilePath)
         let outputFolderAbsolutePath = Path.GetFullPath(outputFolderPath)
         printfn "Reading models definitions from %s" inputFileAbsolutePath
+        parseModelYaml(inputFileAbsolutePath)
         printfn "Writing models %s source files into %s" langName outputFolderAbsolutePath
         0
     with e ->
