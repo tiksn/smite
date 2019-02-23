@@ -6,10 +6,24 @@ module Parser =
     open YamlDotNet.RepresentationModel
     open System
 
+    let parseModelYamlRootElement (rootNode: YamlMappingNode) =
+        let ns = rootNode.Children.[new YamlScalarNode("namespace")]
+        let models = rootNode.Children.[new YamlScalarNode("models")]
+
+        let nsSeq = match ns with
+        | :? YamlSequenceNode as yamlSequenceNode -> yamlSequenceNode
+        | _ -> raise (FormatException("Node 'namespace' must be sequence"))
+
+        let nsArray = nsSeq |> Seq.map (fun x -> x.ToString()) |> Seq.toArray
+
+        Console.WriteLine(ns.NodeType)
+        Console.WriteLine(models.NodeType)
+        ()
+
     let parseModelYamlDocument (document: YamlDocument) =
-        let doc  = document
-        let t = doc.RootNode.NodeType.ToString()
-        printfn "%s" t
+        match document.RootNode with
+        | :? YamlMappingNode as mappingNode -> parseModelYamlRootElement(mappingNode)
+        | _ -> raise (FormatException("Document's root element must be mapping node."))
 
     let parseModelYaml fileName =
         let yaml = File.ReadAllText fileName
