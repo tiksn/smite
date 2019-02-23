@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="SerializationModels.fs" />
     <Compile Include="TypeScriptTranspiler.fs" />
     <Compile Include="FSharpTranspiler.fs" />
     <Compile Include="CSharpTranspiler.fs" />
-    <Compile Include="SerializationModels.fs" />
     <Compile Include="Parser.fs" />
   </ItemGroup>
 

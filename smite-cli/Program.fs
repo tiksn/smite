@@ -40,7 +40,12 @@ let main argv =
         let inputFileAbsolutePath = Path.GetFullPath(inputFilePath)
         let outputFolderAbsolutePath = Path.GetFullPath(outputFolderPath)
         printfn "Reading models definitions from %s" inputFileAbsolutePath
-        parseModelYaml(inputFileAbsolutePath)
+        let models = parseModelYaml(inputFileAbsolutePath)
+        let files = match lang with
+        | SupportedProgrammingLanguage.CSharp -> CSharpTranspiler.transpile(models)
+        | SupportedProgrammingLanguage.FSharp -> FSharpTranspiler.transpile(models)
+        | SupportedProgrammingLanguage.TypeScript -> TypeScriptTranspiler.transpile(models)
+
         printfn "Writing models %s source files into %s" langName outputFolderAbsolutePath
         0
     with e ->

@@ -1,5 +1,5 @@
 ﻿namespace TIKSN.smite.lib
 
 module CSharpTranspiler =
-    let transpile =
+    let transpile(models: seq<NamespaceDefinition>) =
         0
