@@ -8,6 +8,7 @@ module CSharpTranspiler =
     open System.Text
     open System.IO
     open Microsoft.CodeAnalysis.CSharp.Syntax
+    open Microsoft.CodeAnalysis.Editing
 
     let fileExtension = ".cs"
 
@@ -18,24 +19,19 @@ module CSharpTranspiler =
         | FieldType.RealType -> "double"
         | FieldType.StringType -> "string"
 
-    let generateFieldCode(fieldDefinition: FieldDefinition) =
-        let ts = SyntaxFactory.ParseTypeName(getTypeName(fieldDefinition.Type))
-        let vd = SyntaxFactory.VariableDeclaration(ts).AddVariables(SyntaxFactory.VariableDeclarator(fieldDefinition.Name))
-        let fd = SyntaxFactory.FieldDeclaration(vd).AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
-        fd
-
-    let generateFieldsCode(fieldDefinitions: FieldDefinition[]) =
+    let generateFieldsCode(syntaxGenerator: SyntaxGenerator, fieldDefinitions: FieldDefinition[]) =
         fieldDefinitions
-        |> Seq.map generateFieldCode
+        |> Seq.map (fun x -> RoslynTranspiler.generateFieldCode(syntaxGenerator, x, getTypeName))
         |> Seq.map (fun x -> x :> MemberDeclarationSyntax)
         |> Seq.toArray
 
     let generateCSharpCode(ns: string[], model: ModelDefinition) =
+        let syntaxGenerator = SyntaxGenerator.GetGenerator(new AdhocWorkspace(), LanguageNames.CSharp)
         let cu = SyntaxFactory.CompilationUnit()
         let nsString = CommonFeatures.composeDotSeparatedNamespace(ns)
         let nsds = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(nsString))
         let cds = SyntaxFactory.ClassDeclaration(model.Name).AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.SealedKeyword))
-        let fieldDeclarations = generateFieldsCode(model.Fields)
+        let fieldDeclarations = generateFieldsCode(syntaxGenerator, model.Fields)
         let cdsWithFields = cds.AddMembers(fieldDeclarations)
         let customWorkspace = new AdhocWorkspace()
         let formattedNode = Formatter.Format(cu.AddMembers(nsds.AddMembers(cdsWithFields)), customWorkspace)
