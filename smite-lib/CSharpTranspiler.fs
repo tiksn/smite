@@ -7,7 +7,6 @@ module CSharpTranspiler =
     open Microsoft.CodeAnalysis
     open System.Text
     open System.IO
-    open System
     open Microsoft.CodeAnalysis.CSharp.Syntax
 
     let fileExtension = ".cs"
