@@ -21,6 +21,10 @@
     {
       "Id": "0c8b8b15-7238-4947-b1df-4cdf508d6e54",
       "Command": "--output-folder ..\\..\\..\\..\\.trash\\models"
+    },
+    {
+      "Id": "2db6527c-a818-45b8-8a27-b66a858b9822",
+      "Command": "--help"
     }
   ]
 }
