@@ -1,6 +1,8 @@
 ﻿namespace TIKSN.smite.lib
 
 module CommonFeatures =
+    open System
+
     let getStartSegments(ns: string[], startingSegmentsCount) =
         let left, _ = ns |> Array.splitAt(startingSegmentsCount)
         left
@@ -22,3 +24,6 @@ module CommonFeatures =
         let numberOfCommonSegments = seq { 0 .. minNamespaceLength } |> Seq.where (fun x -> hasSameStartSegments(nsSeq, x)) |> Seq.max
         namespaceDefinitions
         |> Seq.map (fun x -> { Namespace=x.Namespace; Filespace=getEndSegments(x.Namespace, numberOfCommonSegments) |> Seq.toArray; Models=x.Models })
+
+    let composeDotSeparatedNamespace(ns: string[]) =
+        String.Join(".", ns)
