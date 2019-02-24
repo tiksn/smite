@@ -12,7 +12,7 @@ let tests =
       let nsd = seq [{Namespace=[|"Microsoft"; "Graph"|]; Models=modelsArray} ;
                     {Namespace=[|"System"; "Collections"; "Generic"|]; Models=modelsArray} ;
                     {Namespace=[|"TIKSN"; "smite"; "lib"; "core"|]; Models=modelsArray}]
-      let subject = CommonFeatures.getFilespaceDefinition(nsd)
+      let subject = CommonFeatures.getFilespaceDefinitions(nsd)
       Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
 
       let nsArray = nsd |> Seq.map (fun x -> x.Namespace) |> Seq.toArray
@@ -30,7 +30,7 @@ let tests =
                     {Namespace=[|"System"; "Collections"|]; Models=modelsArray} ;
                     {Namespace=[|"System"; "Collections"; "Generic"|]; Models=modelsArray} ;
                     {Namespace=[|"System"; "Collections"; "Specialized "|]; Models=modelsArray}]
-      let subject = CommonFeatures.getFilespaceDefinition(nsd)
+      let subject = CommonFeatures.getFilespaceDefinitions(nsd)
       Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
 
       let nsArray = nsd |> Seq.map (fun x -> x.Namespace) |> Seq.toArray
@@ -47,7 +47,7 @@ let tests =
       let nsd = seq [{Namespace=[|"System"; "Collections"|]; Models=modelsArray} ;
                     {Namespace=[|"System"; "Collections"; "Generic"|]; Models=modelsArray} ;
                     {Namespace=[|"System"; "Collections"; "Specialized "|]; Models=modelsArray}]
-      let subject = CommonFeatures.getFilespaceDefinition(nsd)
+      let subject = CommonFeatures.getFilespaceDefinitions(nsd)
       Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
 
       let nsArray = nsd |> Seq.map (fun x -> x.Namespace) |> Seq.toArray

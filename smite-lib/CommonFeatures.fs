@@ -16,7 +16,7 @@ module CommonFeatures =
         |> Seq.toArray)
         nsSeqDistinct.Length = 1
 
-    let getFilespaceDefinition(namespaceDefinitions: seq<NamespaceDefinition>) =
+    let getFilespaceDefinitions(namespaceDefinitions: seq<NamespaceDefinition>) =
         let nsSeq = namespaceDefinitions |> Seq.map (fun x -> x.Namespace)
         let minNamespaceLength = namespaceDefinitions |> Seq.map (fun x -> x.Namespace.Length) |> Seq.min
         let numberOfCommonSegments = seq { 0 .. minNamespaceLength } |> Seq.where (fun x -> hasSameStartSegments(nsSeq, x)) |> Seq.max
