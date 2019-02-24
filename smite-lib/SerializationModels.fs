@@ -13,3 +13,5 @@ type ModelDefinition = { Name: string; Fields: FieldDefinition[] }
 type NamespaceDefinition = { Namespace: string[]; Models: ModelDefinition[] }
 
 type FilespaceDefinition = { Namespace: string[]; Filespace: string[]; Models: ModelDefinition[] }
+
+type SourceFile = {RelativeFilePath: string[]; FileContent: string}
