@@ -7,16 +7,39 @@ module CSharpTranspiler =
     open Microsoft.CodeAnalysis
     open System.Text
     open System.IO
+    open System
+    open Microsoft.CodeAnalysis.CSharp.Syntax
 
     let fileExtension = ".cs"
+
+    let getTypeName(t: FieldType) =
+        match t with
+        | FieldType.BooleanType -> "bool"
+        | FieldType.IntegerType -> "int"
+        | FieldType.RealType -> "double"
+        | FieldType.StringType -> "string"
+
+    let generateFieldCode(fieldDefinition: FieldDefinition) =
+        let ts = SyntaxFactory.ParseTypeName(getTypeName(fieldDefinition.Type))
+        let vd = SyntaxFactory.VariableDeclaration(ts).AddVariables(SyntaxFactory.VariableDeclarator(fieldDefinition.Name))
+        let fd = SyntaxFactory.FieldDeclaration(vd).AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword))
+        fd
+
+    let generateFieldsCode(fieldDefinitions: FieldDefinition[]) =
+        fieldDefinitions
+        |> Seq.map generateFieldCode
+        |> Seq.map (fun x -> x :> MemberDeclarationSyntax)
+        |> Seq.toArray
 
     let generateCSharpCode(ns: string[], model: ModelDefinition) =
         let cu = SyntaxFactory.CompilationUnit()
         let nsString = CommonFeatures.composeDotSeparatedNamespace(ns)
         let nsds = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(nsString))
         let cds = SyntaxFactory.ClassDeclaration(model.Name).AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.SealedKeyword))
+        let fieldDeclarations = generateFieldsCode(model.Fields)
+        let cdsWithFields = cds.AddMembers(fieldDeclarations)
         let customWorkspace = new AdhocWorkspace()
-        let formattedNode = Formatter.Format(cu.AddMembers(nsds.AddMembers(cds)), customWorkspace)
+        let formattedNode = Formatter.Format(cu.AddMembers(nsds.AddMembers(cdsWithFields)), customWorkspace)
         let sb = new StringBuilder()
         use writer = new StringWriter(sb)
         formattedNode.WriteTo(writer)
