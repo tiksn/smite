@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="CommonFeatures.fs" />
     <Compile Include="Sample.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
@@ -16,5 +17,9 @@
     <PackageReference Include="FSharp.Core" Version="4.6.2" />
     <PackageReference Include="YoloDev.Expecto.TestSdk" Version="0.7.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\smite-lib\smite-lib.fsproj" />
   </ItemGroup>
 </Project>
