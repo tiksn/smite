@@ -2,43 +2,14 @@
 
 module CSharpTranspiler =
     open TIKSN.smite.lib
-    open Microsoft.CodeAnalysis.CSharp
-    open Microsoft.CodeAnalysis.Formatting
     open Microsoft.CodeAnalysis
-    open System.Text
-    open System.IO
-    open Microsoft.CodeAnalysis.CSharp.Syntax
     open Microsoft.CodeAnalysis.Editing
 
     let fileExtension = ".cs"
 
-    let getTypeName(t: FieldType) =
-        match t with
-        | FieldType.BooleanType -> "bool"
-        | FieldType.IntegerType -> "int"
-        | FieldType.RealType -> "double"
-        | FieldType.StringType -> "string"
-
-    let generateFieldsCode(syntaxGenerator: SyntaxGenerator, fieldDefinitions: FieldDefinition[]) =
-        fieldDefinitions
-        |> Seq.map (fun x -> RoslynTranspiler.generateFieldCode(syntaxGenerator, x, getTypeName))
-        |> Seq.map (fun x -> x :> MemberDeclarationSyntax)
-        |> Seq.toArray
-
     let generateCSharpCode(ns: string[], model: ModelDefinition) =
         let syntaxGenerator = SyntaxGenerator.GetGenerator(new AdhocWorkspace(), LanguageNames.CSharp)
-        let cu = SyntaxFactory.CompilationUnit()
-        let nsString = CommonFeatures.composeDotSeparatedNamespace(ns)
-        let nsds = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName(nsString))
-        let cds = SyntaxFactory.ClassDeclaration(model.Name).AddModifiers(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.SealedKeyword))
-        let fieldDeclarations = generateFieldsCode(syntaxGenerator, model.Fields)
-        let cdsWithFields = cds.AddMembers(fieldDeclarations)
-        let customWorkspace = new AdhocWorkspace()
-        let formattedNode = Formatter.Format(cu.AddMembers(nsds.AddMembers(cdsWithFields)), customWorkspace)
-        let sb = new StringBuilder()
-        use writer = new StringWriter(sb)
-        formattedNode.WriteTo(writer)
-        sb.ToString()
+        RoslynTranspiler.generateSourceFileCode(syntaxGenerator, ns, model)
 
     let transpileModelDefinition(ns: string[], fs: string[], model: ModelDefinition) =
         let sourceFileName = model.Name + fileExtension
