@@ -36,3 +36,12 @@ module RoslynTranspiler =
         let namespaceDeclaration = generateNamespaceDeclaration(syntaxGenerator, ns, model)
         let newNode = syntaxGenerator.CompilationUnit(usingDirectives, namespaceDeclaration).NormalizeWhitespace()
         newNode.ToString()
+
+    let transpileModelDefinition(syntaxGenerator: SyntaxGenerator, fileExtension: string, ns: string[], fs: string[], model: ModelDefinition) =
+        let sourceFileName = model.Name + fileExtension
+        let relativeFilePath = Array.append fs [|sourceFileName|]
+        {RelativeFilePath=relativeFilePath; FileContent=generateSourceFileCode(syntaxGenerator, ns, model)}
+
+    let transpileFilespaceDefinition(syntaxGenerator: SyntaxGenerator, fileExtension: string, filespaceDefinition: FilespaceDefinition) =
+        filespaceDefinition.Models
+        |> Seq.map (fun x -> transpileModelDefinition(syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x))
