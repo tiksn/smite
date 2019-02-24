@@ -31,7 +31,7 @@ let main argv =
     let compositionRootSetup = new CompositionRootSetup(configurationRoot)
     let serviceProvider = compositionRootSetup.CreateServiceProvider()
     let timeProvider = serviceProvider.GetRequiredService<ITimeProvider>()
-    let parser = ArgumentParser.Create<CLIArguments>(programName = "smite-cli.dll")
+    let parser = ArgumentParser.Create<CLIArguments>(programName = "smite")
     try
         let results =  parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
         let inputFilePath = results.GetResult(Input_File)
