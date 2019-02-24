@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Include="SerializationModels.fs" />
+    <Compile Include="RoslynTranspiler.fs" />
     <Compile Include="TypeScriptTranspiler.fs" />
     <Compile Include="FSharpTranspiler.fs" />
     <Compile Include="CSharpTranspiler.fs" />
@@ -14,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
     <PackageReference Include="TIKSN-Framework" Version="3.1.0" />
     <PackageReference Include="YamlDotNet" Version="5.4.0" />
   </ItemGroup>
