@@ -2,13 +2,18 @@
 
 module CSharpTranspiler =
     open TIKSN.smite.lib
+    open Microsoft.CodeAnalysis.CSharp
 
     let fileExtension = ".cs"
+
+    let generateCSharpCode(ns: string[], model: ModelDefinition) =
+        let cu = SyntaxFactory.CompilationUnit()
+        ""
 
     let transpileModelDefinition(ns: string[], fs: string[], model: ModelDefinition) =
         let sourceFileName = model.Name + fileExtension
         let relativeFilePath = Array.append fs [|sourceFileName|]
-        {RelativeFilePath=relativeFilePath; FileContent=""}
+        {RelativeFilePath=relativeFilePath; FileContent=generateCSharpCode(ns, model)}
 
     let transpileFilespaceDefinition(filespaceDefinition: FilespaceDefinition) =
         filespaceDefinition.Models
