@@ -5,7 +5,7 @@ module VisualBasicTranspiler =
 
     let getTypeName(t: FieldType) =
         match t with
-        | FieldType.BooleanType -> "bool"
-        | FieldType.IntegerType -> "int"
-        | FieldType.RealType -> "double"
-        | FieldType.StringType -> "string"
+        | FieldType.BooleanType -> "Boolean"
+        | FieldType.IntegerType -> "Integer"
+        | FieldType.RealType -> "Double"
+        | FieldType.StringType -> "String"
