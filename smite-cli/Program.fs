@@ -1,5 +1,4 @@
-﻿
-open Argu
+﻿open Argu
 open TIKSN.smite.cli
 open TIKSN.Time
 open Microsoft.Extensions.DependencyInjection
@@ -10,7 +9,8 @@ open System
 type SupportedProgrammingLanguage =
     | FSharp = 1
     | CSharp = 2
-    | TypeScript = 3
+    | VisualBasic = 3
+    | TypeScript = 4
 
 type CLIArguments =
     | [<Mandatory>] Input_File of string
@@ -45,6 +45,7 @@ let main argv =
         let files = match lang with
         | SupportedProgrammingLanguage.CSharp -> CSharpTranspiler.transpile(models)
         //| SupportedProgrammingLanguage.FSharp -> FSharpTranspiler.transpile(models)
+        | SupportedProgrammingLanguage.VisualBasic -> VisualBasicTranspiler.transpile(models)
         //| SupportedProgrammingLanguage.TypeScript -> TypeScriptTranspiler.transpile(models)
         saveSourceFiles(outputFolderAbsolutePath, files)
         printfn "Writing models %s source files into %s" langName outputFolderAbsolutePath
