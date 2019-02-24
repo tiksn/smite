@@ -14,6 +14,15 @@ let tests =
                     {Namespace=[|"TIKSN"; "smite"; "lib"; "core"|]; Models=modelsArray}]
       let subject = CommonFeatures.getFilespaceDefinition(nsd)
       Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
+
+      let nsArray = nsd |> Seq.map (fun x -> x.Namespace) |> Seq.toArray
+      let fsArray = subject |> Seq.map (fun x -> x.Filespace) |> Seq.toArray
+
+      let itemCount = nsArray.Length
+      for i = 0 to itemCount - 1 do
+        for j = 0 to nsArray.[i].Length - 1 do
+            if i <> j then
+                Expect.equal nsArray.[i].[j] fsArray.[i].[j] "Item values must be equal"
   ]
 
 
