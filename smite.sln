@@ -5,7 +5,9 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "smite-cli", "smite-cli\smite-cli.fsproj", "{CFEAAAA7-9EF3-41C5-8B0C-258D151101F1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "smite-lib", "smite-lib\smite-lib.fsproj", "{E789BB1A-A6ED-4326-A195-5A905D68FF2A}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "smite-lib", "smite-lib\smite-lib.fsproj", "{E789BB1A-A6ED-4326-A195-5A905D68FF2A}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "smite.tests", "smite.tests\smite.tests.fsproj", "{8121404A-B6D9-48B4-BB3E-2F4A4E5BD05B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E789BB1A-A6ED-4326-A195-5A905D68FF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E789BB1A-A6ED-4326-A195-5A905D68FF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E789BB1A-A6ED-4326-A195-5A905D68FF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8121404A-B6D9-48B4-BB3E-2F4A4E5BD05B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8121404A-B6D9-48B4-BB3E-2F4A4E5BD05B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8121404A-B6D9-48B4-BB3E-2F4A4E5BD05B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8121404A-B6D9-48B4-BB3E-2F4A4E5BD05B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
