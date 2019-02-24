@@ -2,4 +2,4 @@
 
 module FSharpTranspiler =
     let transpile(models: seq<NamespaceDefinition>) =
-        0
+        []

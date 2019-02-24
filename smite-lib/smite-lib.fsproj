@@ -13,6 +13,7 @@
     <Compile Include="FSharpTranspiler.fs" />
     <Compile Include="CSharpTranspiler.fs" />
     <Compile Include="Parser.fs" />
+    <Compile Include="Saving.fs" />
   </ItemGroup>
 
   <ItemGroup>

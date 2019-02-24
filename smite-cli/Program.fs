@@ -5,6 +5,7 @@ open TIKSN.Time
 open Microsoft.Extensions.DependencyInjection
 open System.IO
 open TIKSN.smite.lib
+open System
 
 type SupportedProgrammingLanguage =
     | FSharp = 1
@@ -43,9 +44,9 @@ let main argv =
         let models = parseModelYaml(inputFileAbsolutePath)
         let files = match lang with
         | SupportedProgrammingLanguage.CSharp -> CSharpTranspiler.transpile(models)
-        | SupportedProgrammingLanguage.FSharp -> FSharpTranspiler.transpile(models)
-        | SupportedProgrammingLanguage.TypeScript -> TypeScriptTranspiler.transpile(models)
-
+        //| SupportedProgrammingLanguage.FSharp -> FSharpTranspiler.transpile(models)
+        //| SupportedProgrammingLanguage.TypeScript -> TypeScriptTranspiler.transpile(models)
+        saveSourceFiles(outputFolderAbsolutePath, files)
         printfn "Writing models %s source files into %s" langName outputFolderAbsolutePath
         0
     with e ->
