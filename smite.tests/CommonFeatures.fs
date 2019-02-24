@@ -13,7 +13,7 @@ let tests =
                     {Namespace=[|"System"; "Collection"; "Generic"|]; Models=modelsArray} ;
                     {Namespace=[|"TIKSN"; "smite"; "lib"; "core"|]; Models=modelsArray}]
       let subject = CommonFeatures.getFilespaceDefinition(nsd)
-      Expect.isTrue (subject = 0) "xxx"
+      Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
   ]
 
 
