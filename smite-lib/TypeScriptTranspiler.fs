@@ -1,5 +1,4 @@
-﻿namespace TIKSN.smite.lib
+namespace TIKSN.smite.lib
 
 module TypeScriptTranspiler =
-    let transpile(models: seq<NamespaceDefinition>) =
-        0
+    let transpile (models : seq<NamespaceDefinition>) = 0

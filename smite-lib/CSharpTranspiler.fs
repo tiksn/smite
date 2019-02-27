@@ -1,4 +1,4 @@
-﻿namespace TIKSN.smite.lib
+namespace TIKSN.smite.lib
 
 module CSharpTranspiler =
     open TIKSN.smite.lib
@@ -7,8 +7,14 @@ module CSharpTranspiler =
 
     let fileExtension = ".cs"
 
-    let transpile(models: seq<NamespaceDefinition>) =
-        let syntaxGenerator = SyntaxGenerator.GetGenerator(new AdhocWorkspace(), LanguageNames.CSharp)
-        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions(models)
+    let transpile (models : seq<NamespaceDefinition>) =
+        let syntaxGenerator =
+            SyntaxGenerator.GetGenerator
+                (new AdhocWorkspace(), LanguageNames.CSharp)
+        let filespaceDefinitions =
+            CommonFeatures.getFilespaceDefinitions (models)
         filespaceDefinitions
-        |> Seq.collect (fun x -> RoslynTranspiler.transpileFilespaceDefinition(syntaxGenerator, fileExtension, x))
+        |> Seq.collect
+               (fun x ->
+               RoslynTranspiler.transpileFilespaceDefinition
+                   (syntaxGenerator, fileExtension, x))

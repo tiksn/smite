@@ -1,6 +1,6 @@
-﻿module smite.tests
+module smite.tests
+
 open Expecto
 
 [<EntryPoint>]
-let main argv =
-    Tests.runTestsInAssembly defaultConfig argv
+let main argv = Tests.runTestsInAssembly defaultConfig argv
