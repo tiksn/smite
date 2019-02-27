@@ -7,7 +7,7 @@ open TIKSN.smite.lib
 [<Tests>]
 let tests =
   testList "CommonFeatures" [
-    testCase "no common segment" <| fun _ ->
+    testCase "No common segment" <| fun _ ->
       let modelsArray = [||]
       let nsd = seq [{Namespace=[|"Microsoft"; "Graph"|]; Models=modelsArray} ;
                     {Namespace=[|"System"; "Collections"; "Generic"|]; Models=modelsArray} ;
