@@ -11,6 +11,10 @@
       "Command": "--lang csharp"
     },
     {
+      "Id": "aab0745c-ef03-4d65-b142-cd11a91b7b41",
+      "Command": "--lang fsharp"
+    },
+    {
       "Id": "944d0f49-e68b-4ab0-bab9-c995ee0aa862",
       "Command": "--invalid-param"
     },
