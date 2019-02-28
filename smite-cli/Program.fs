@@ -48,7 +48,8 @@ let main argv =
             match lang with
             | SupportedProgrammingLanguage.CSharp ->
                 CSharpTranspiler.transpile (models)
-            //| SupportedProgrammingLanguage.FSharp -> FSharpTranspiler.transpile(models)
+            | SupportedProgrammingLanguage.FSharp ->
+                FSharpTranspiler.transpile (models)
             | SupportedProgrammingLanguage.VisualBasic ->
                 VisualBasicTranspiler.transpile (models)
         //| SupportedProgrammingLanguage.TypeScript -> TypeScriptTranspiler.transpile(models)
