@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="SerializationModels.fs" />
     <Compile Include="CommonFeatures.fs" />
+    <Compile Include="IndentationFeatures.fs" />
     <Compile Include="TypeScriptTranspiler.fs" />
     <Compile Include="FSharpTranspiler.fs" />
     <Compile Include="RoslynTranspiler.fs" />
