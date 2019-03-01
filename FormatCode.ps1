@@ -1,1 +1,1 @@
-fantomas . --recurse 
+fantomas . --recurse
