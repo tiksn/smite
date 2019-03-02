@@ -48,8 +48,7 @@ module FSharpTranspiler =
         let directives =
             [ { LineIndentCount = 0
                 LineContent = "namespace " + nsString }
-              { LineIndentCount = 0
-                LineContent = "" }
+              emptyLine
               { LineIndentCount = 0
                 LineContent = "module " + moduleName + "Models =" }
               { LineIndentCount = 1
