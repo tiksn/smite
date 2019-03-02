@@ -41,3 +41,10 @@ module CommonFeatures =
                  Models = x.Models })
 
     let composeDotSeparatedNamespace (ns : string []) = String.Join(".", ns)
+
+    let rec getFilespacesWithExtension (filespaces : string list,
+                                        fileExtension : string) =
+        match filespaces with
+        | hd :: [] -> [ hd + fileExtension ]
+        | hd :: tl -> hd :: getFilespacesWithExtension (tl, fileExtension)
+        | _ -> failwith "Empty list."

@@ -59,16 +59,10 @@ module FSharpTranspiler =
         let sourceFileLines = directives @ classDeclarationLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let rec getFilespacesWithExtension filespaces : string list =
-        match filespaces with
-        | hd :: [] -> [ hd + fileExtension ]
-        | hd :: tl -> hd :: getFilespacesWithExtension tl
-        | _ -> failwith "Empty list."
-
     let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition) =
         let filespacesWithExtension =
-            getFilespacesWithExtension
-                (filespaceDefinition.Filespace |> Array.toList)
+            CommonFeatures.getFilespacesWithExtension
+                ((filespaceDefinition.Filespace |> Array.toList), fileExtension)
         let filePath = filespacesWithExtension |> List.toArray
         let moduleName = filespaceDefinition.Filespace |> Seq.last
         let sourceFileCode =
