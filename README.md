@@ -4,6 +4,13 @@
 
 DTO transpiler
 
+## Supported Programming Languages
+- [x] C#
+- [x] F#
+- [x] Visual Basic.NET
+- [ ] TypeScript
+- [ ] Python
+
 ## Install
 
 ```PowerShell
