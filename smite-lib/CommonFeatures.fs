@@ -48,3 +48,10 @@ module CommonFeatures =
         | hd :: [] -> [ hd + fileExtension ]
         | hd :: tl -> hd :: getFilespacesWithExtension (tl, fileExtension)
         | _ -> failwith "Empty list."
+
+    let getFilePathWithExtension (filespaceDefinition : FilespaceDefinition,
+                                  fileExtension) =
+        let filespacesWithExtension =
+            getFilespacesWithExtension
+                ((filespaceDefinition.Filespace |> Array.toList), fileExtension)
+        filespacesWithExtension |> List.toArray

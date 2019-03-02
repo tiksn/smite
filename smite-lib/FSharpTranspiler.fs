@@ -60,10 +60,9 @@ module FSharpTranspiler =
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition) =
-        let filespacesWithExtension =
-            CommonFeatures.getFilespacesWithExtension
-                ((filespaceDefinition.Filespace |> Array.toList), fileExtension)
-        let filePath = filespacesWithExtension |> List.toArray
+        let filePath =
+            CommonFeatures.getFilePathWithExtension
+                (filespaceDefinition, fileExtension)
         let moduleName = filespaceDefinition.Filespace |> Seq.last
         let sourceFileCode =
             generateSourceFileCode
