@@ -48,8 +48,7 @@ module FSharpTranspiler =
         let directives =
             [ { LineIndentCount = 0
                 LineContent = "namespace " + nsString }
-              { LineIndentCount = 0
-                LineContent = "" }
+              emptyLine
               { LineIndentCount = 0
                 LineContent = "module " + moduleName + "Models =" }
               { LineIndentCount = 1
@@ -59,17 +58,10 @@ module FSharpTranspiler =
         let sourceFileLines = directives @ classDeclarationLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let rec getFilespacesWithExtension filespaces : string list =
-        match filespaces with
-        | hd :: [] -> [ hd + fileExtension ]
-        | hd :: tl -> hd :: getFilespacesWithExtension tl
-        | _ -> failwith "Empty list."
-
     let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition) =
-        let filespacesWithExtension =
-            getFilespacesWithExtension
-                (filespaceDefinition.Filespace |> Array.toList)
-        let filePath = filespacesWithExtension |> List.toArray
+        let filePath =
+            CommonFeatures.getFilePathWithExtension
+                (filespaceDefinition, fileExtension)
         let moduleName = filespaceDefinition.Filespace |> Seq.last
         let sourceFileCode =
             generateSourceFileCode
