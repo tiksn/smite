@@ -7,6 +7,10 @@ module IndentationFeatures =
         { LineIndentCount : int
           LineContent : string }
 
+    let emptyLine =
+        { LineIndentCount = 0
+          LineContent = "" }
+
     let appendLineToBuilder (builder : StringBuilder, indentCount : int,
                              lineContent : string, spaces : string) =
         seq { 1..indentCount }
