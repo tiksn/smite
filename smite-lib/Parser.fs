@@ -34,8 +34,22 @@ module Parser =
             | "real" -> FieldType.RealType
             | "string" -> FieldType.StringType
             | _ -> raise (FormatException("Unknown format type"))
+
+        let isArrayKey = new YamlScalarNode("array")
+
+        let isArrayValue =
+            match fieldNode.Children.ContainsKey(isArrayKey) with
+            | true -> Some(getScalarNode(fieldNode.Children.[isArrayKey]).Value)
+            | false -> None
+
+        let isArray =
+            match isArrayValue with
+            | Some x -> bool.Parse x
+            | None -> false
+
         { Name = nameValue
-          Type = typeEnum }
+          Type = typeEnum
+          IsArray = isArray }
 
     let parseModelSequence (modelNode : YamlMappingNode) =
         let nameValue =

@@ -8,7 +8,8 @@ type FieldType =
 
 type FieldDefinition =
     { Name : string
-      Type : FieldType }
+      Type : FieldType
+      IsArray : bool }
 
 type ModelDefinition =
     { Name : string
