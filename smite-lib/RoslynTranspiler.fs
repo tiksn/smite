@@ -15,9 +15,16 @@ module RoslynTranspiler =
                            fieldDefinition : FieldDefinition) =
         let tn = getSpecialType (fieldDefinition.Type)
         let ts = syntaxGenerator.TypeExpression(tn)
+        let ats = syntaxGenerator.ArrayTypeExpression(ts)
+
+        let t =
+            match fieldDefinition.IsArray with
+            | true -> ats
+            | false -> ts
+
         let fd =
             syntaxGenerator.FieldDeclaration
-                (fieldDefinition.Name, ts, Accessibility.Public)
+                (fieldDefinition.Name, t, Accessibility.Public)
         fd
 
     let generateFieldsCode (syntaxGenerator : SyntaxGenerator,

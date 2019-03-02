@@ -12,6 +12,9 @@ models:
         type: string
       - name: LastName
         type: string
+      - name: ContactIds
+        type: integer
+        array: true
 ...
 ---
 namespace:
