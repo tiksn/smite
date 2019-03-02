@@ -10,6 +10,7 @@ DTO transpiler
 - [x] Visual Basic.NET
 - [ ] TypeScript
 - [ ] Python
+- [ ] Java
 
 ## Install
 
