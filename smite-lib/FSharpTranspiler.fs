@@ -7,6 +7,40 @@ module FSharpTranspiler =
     let fileExtension = ".fs"
     let indentSpaces = 4
 
+    let getSpecialType (t : FieldType) =
+        match t with
+        | FieldType.BooleanType -> "bool"
+        | FieldType.IntegerType -> "int"
+        | FieldType.RealType -> "double"
+        | FieldType.StringType -> "string"
+
+    let generateFieldCode (fieldDefinition : FieldDefinition) =
+        let tn = getSpecialType (fieldDefinition.Type)
+        { LineIndentCount = 2
+          LineContent = fieldDefinition.Name + ": " + tn + ";" }
+
+    let generateFieldsCode (fieldDefinitions : FieldDefinition []) =
+        fieldDefinitions
+        |> Seq.map (fun x -> generateFieldCode (x))
+        |> Seq.toList
+
+    let generateClassDeclaration (model : ModelDefinition) =
+        let firstLine =
+            { LineIndentCount = 1
+              LineContent = "type " + model.Name + " = {" }
+
+        let lastLine =
+            { LineIndentCount = 1
+              LineContent = "}" }
+
+        let members = generateFieldsCode (model.Fields)
+        [ emptyLine; firstLine ] @ members @ [ lastLine; emptyLine ]
+
+    let generateClassDeclarations (models : ModelDefinition []) =
+        models
+        |> Seq.collect generateClassDeclaration
+        |> Seq.toList
+
     let generateSourceFileCode (ns : string [], moduleName : string,
                                 models : ModelDefinition []) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
@@ -20,7 +54,10 @@ module FSharpTranspiler =
                 LineContent = "module " + moduleName + "Models =" }
               { LineIndentCount = 1
                 LineContent = "open System" } ]
-        convertIndentedLinesToString (directives, indentSpaces)
+
+        let classDeclarationLines = generateClassDeclarations models
+        let sourceFileLines = directives @ classDeclarationLines
+        convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let rec getFilespacesWithExtension filespaces : string list =
         match filespaces with
