@@ -15,6 +15,10 @@
       "Command": "--lang fsharp"
     },
     {
+      "Id": "69929275-ff0a-49e3-9376-eee52a5bb502",
+      "Command": "--lang typescript"
+    },
+    {
       "Id": "944d0f49-e68b-4ab0-bab9-c995ee0aa862",
       "Command": "--invalid-param"
     },
