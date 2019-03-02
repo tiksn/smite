@@ -16,8 +16,14 @@ module FSharpTranspiler =
 
     let generateFieldCode (fieldDefinition : FieldDefinition) =
         let tn = getSpecialType (fieldDefinition.Type)
+        let atn = tn + " []"
+
+        let t =
+            match fieldDefinition.IsArray with
+            | true -> atn
+            | false -> tn
         { LineIndentCount = 2
-          LineContent = fieldDefinition.Name + ": " + tn + ";" }
+          LineContent = fieldDefinition.Name + ": " + t }
 
     let generateFieldsCode (fieldDefinitions : FieldDefinition []) =
         fieldDefinitions
