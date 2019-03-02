@@ -1,4 +1,4 @@
-﻿namespace TIKSN.smite.cli
+namespace TIKSN.smite.cli
 
 open TIKSN.Configuration
 open TIKSN.DependencyInjection
@@ -11,7 +11,6 @@ type ConfigurationRootSetup() =
 
 type CompositionRootSetup(configurationRoot) =
     inherit AutofacPlatformCompositionRootSetupBase(configurationRoot)
-    override this.ConfigureContainerBuilder(builder: ContainerBuilder) =
-        ()
-    override this.ConfigureOptions(services: IServiceCollection, configuration: IConfigurationRoot) =
-        ()
+    override this.ConfigureContainerBuilder(builder : ContainerBuilder) = ()
+    override this.ConfigureOptions(services : IServiceCollection,
+                                   configuration : IConfigurationRoot) = ()
