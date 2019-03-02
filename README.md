@@ -8,7 +8,7 @@ DTO transpiler
 - [x] C#
 - [x] F#
 - [x] Visual Basic.NET
-- [ ] TypeScript
+- [x] TypeScript
 - [ ] Python
 - [ ] Java
 
@@ -16,6 +16,11 @@ DTO transpiler
 
 ```PowerShell
 dotnet tool install --global smite-cli
+```
+## Update
+
+```PowerShell
+dotnet tool update --global smite-cli
 ```
 
 ## Help
