@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/nuget/v/smite-cli.svg)](https://www.nuget.org/packages/smite-cli)
 
-DTO transpiler
+DTO transpiler. Language-agnostic way to create DTOs to be shared between back-end and front-end or between different services.
 
 ## Supported Programming Languages
 - [x] C#
