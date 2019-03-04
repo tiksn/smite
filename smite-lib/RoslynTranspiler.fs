@@ -4,17 +4,26 @@ module RoslynTranspiler =
     open Microsoft.CodeAnalysis
     open Microsoft.CodeAnalysis.Editing
 
-    let getSpecialType (t : FieldType) =
+    let getSpecialType (t : PrimitiveType) =
         match t with
-        | FieldType.BooleanType -> SpecialType.System_Boolean
-        | FieldType.IntegerType -> SpecialType.System_Int32
-        | FieldType.RealType -> SpecialType.System_Double
-        | FieldType.StringType -> SpecialType.System_String
+        | BooleanType -> SpecialType.System_Boolean
+        | IntegerType -> SpecialType.System_Int32
+        | RealType -> SpecialType.System_Double
+        | StringType -> SpecialType.System_String
+
+    let getFieldTypeSyntaxNode (syntaxGenerator : SyntaxGenerator,
+                                fieldType : FieldType) =
+        match fieldType with
+        | PrimitiveType primitiveType ->
+            syntaxGenerator.TypeExpression(getSpecialType (primitiveType))
+        | ComplexTypeSameNamespace typeName ->
+            syntaxGenerator.IdentifierName(typeName)
+        | ComplexTypeDifferentNamespace(_, typeName) ->
+            syntaxGenerator.IdentifierName(typeName)
 
     let generateFieldCode (syntaxGenerator : SyntaxGenerator,
                            fieldDefinition : FieldDefinition) =
-        let tn = getSpecialType (fieldDefinition.Type)
-        let ts = syntaxGenerator.TypeExpression(tn)
+        let ts = getFieldTypeSyntaxNode (syntaxGenerator, fieldDefinition.Type)
         let ats = syntaxGenerator.ArrayTypeExpression(ts)
 
         let t =
