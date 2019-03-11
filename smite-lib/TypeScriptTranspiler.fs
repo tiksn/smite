@@ -2,6 +2,7 @@ namespace TIKSN.smite.lib
 
 module TypeScriptTranspiler =
     open IndentationFeatures
+    open System.IO
 
     let fileExtension = ".ts"
     let indentSpaces = 4
@@ -78,14 +79,19 @@ module TypeScriptTranspiler =
 
         (namespaces, lines)
 
-    let generateSourceFileCode (ns : string [], models : ModelDefinition []) =
+    let generateSourceFileCode (ns : string [], models : ModelDefinition [],
+                                getFilespace : string [] -> FilespaceDefinition) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
         let namespaces, lines = generateClassDeclarations models
 
         let usings =
             namespaces
             |> Seq.distinct
-            |> Seq.map CommonFeatures.composeDotSeparatedNamespace
+            |> Seq.map getFilespace
+            |> Seq.map
+                   (fun x ->
+                   CommonFeatures.getFilePathWithExtension (x, fileExtension))
+            |> Seq.map Path.Combine
             |> Seq.map (fun x ->
                    { LineIndentCount = 0
                      LineContent = "import \"./" + x + ".ts\"" })
@@ -104,18 +110,25 @@ module TypeScriptTranspiler =
             usings @ directives @ lines @ namespaceClosingLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition) =
+    let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition,
+                                      getFilespace) =
         let filePath =
             CommonFeatures.getFilePathWithExtension
                 (filespaceDefinition, fileExtension)
         let sourceFileCode =
             generateSourceFileCode
-                (filespaceDefinition.Namespace, filespaceDefinition.Models)
+                (filespaceDefinition.Namespace, filespaceDefinition.Models,
+                 getFilespace)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
     let transpile (models : seq<NamespaceDefinition>) =
         let filespaceDefinitions =
             CommonFeatures.getFilespaceDefinitions (models)
+
+        let getFilespace (ns : string []) =
+            filespaceDefinitions
+            |> Seq.filter (fun x -> x.Namespace = ns)
+            |> Seq.exactlyOne
         filespaceDefinitions
-        |> Seq.map (fun x -> transpileFilespaceDefinition x)
+        |> Seq.map (fun x -> transpileFilespaceDefinition (x, getFilespace))
