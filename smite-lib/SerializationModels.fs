@@ -1,10 +1,15 @@
 namespace TIKSN.smite.lib
 
-type FieldType =
+type PrimitiveType =
     | IntegerType
     | StringType
     | RealType
     | BooleanType
+
+type FieldType =
+    | PrimitiveType of PrimitiveType
+    | ComplexTypeSameNamespace of string
+    | ComplexTypeDifferentNamespace of string [] * string
 
 type FieldDefinition =
     { Name : string

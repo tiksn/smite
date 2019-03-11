@@ -38,4 +38,22 @@ models:
         type: integer
       - name: MeanDailyRetrievalCount
         type: real
+  - name: DocumentRetrievalSummary
+    fields:
+      - name: ID
+        type: integer
+      - name: Owner
+        namespace:
+          - Microsoft
+          - Graph
+          - Users
+        type: GraphUser
+      - name: DocumentID
+        type: integer
+      - name: YesterdayStatistics
+        type: DocumentRetrievalStatistics
+      - name: LastMonthStatistics
+        type: DocumentRetrievalStatistics
+      - name: LastYearStatistics
+        type: DocumentRetrievalStatistics
 ...
