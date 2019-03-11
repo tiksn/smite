@@ -6,23 +6,34 @@ module TypeScriptTranspiler =
     let fileExtension = ".ts"
     let indentSpaces = 4
 
-    let getSpecialType (t : FieldType) =
+    let getSpecialType (t : PrimitiveType) =
         match t with
-        | FieldType.BooleanType -> "boolean"
-        | FieldType.IntegerType -> "number"
-        | FieldType.RealType -> "number"
-        | FieldType.StringType -> "string"
+        | PrimitiveType.BooleanType -> "boolean"
+        | PrimitiveType.IntegerType -> "number"
+        | PrimitiveType.RealType -> "number"
+        | PrimitiveType.StringType -> "string"
+
+    let getFieldTypeSyntaxNode (fieldType : FieldType) =
+        match fieldType with
+        | PrimitiveType primitiveType -> (None, getSpecialType (primitiveType))
+        | ComplexTypeSameNamespace typeName -> (None, typeName)
+        | ComplexTypeDifferentNamespace(nsArray, typeName) ->
+            (Some nsArray, typeName)
 
     let generateFieldCode (fieldDefinition : FieldDefinition) =
-        let tn = getSpecialType (fieldDefinition.Type)
+        let ns, tn = getFieldTypeSyntaxNode (fieldDefinition.Type)
         let atn = tn + "[]"
 
         let t =
             match fieldDefinition.IsArray with
             | true -> atn
             | false -> tn
-        { LineIndentCount = 2
-          LineContent = fieldDefinition.Name + ": " + t + ";" }
+
+        let line =
+            { LineIndentCount = 2
+              LineContent = fieldDefinition.Name + ": " + t + ";" }
+
+        (ns, line)
 
     let generateFieldsCode (fieldDefinitions : FieldDefinition []) =
         fieldDefinitions
@@ -38,31 +49,59 @@ module TypeScriptTranspiler =
             { LineIndentCount = 1
               LineContent = "}" }
 
-        let members = generateFieldsCode (model.Fields)
-        [ emptyLine; firstLine ] @ members @ [ lastLine ]
+        let fields = generateFieldsCode (model.Fields)
+
+        let members =
+            fields
+            |> Seq.map (fun (_, f) -> f)
+            |> Seq.toList
+
+        let namespaces =
+            fields
+            |> Seq.filter (fun (o, _) -> o.IsSome)
+            |> Seq.map (fun (o, _) -> o.Value)
+
+        let lines = [ emptyLine; firstLine ] @ members @ [ lastLine ]
+        (namespaces, lines)
 
     let generateClassDeclarations (models : ModelDefinition []) =
-        models
-        |> Seq.collect generateClassDeclaration
-        |> Seq.toList
+        let namespaces =
+            models
+            |> Seq.map generateClassDeclaration
+            |> Seq.collect (fun (x, _) -> x)
+
+        let lines =
+            models
+            |> Seq.map generateClassDeclaration
+            |> Seq.collect (fun (_, x) -> x)
+            |> Seq.toList
+
+        (namespaces, lines)
 
     let generateSourceFileCode (ns : string [], models : ModelDefinition []) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
+        let namespaces, lines = generateClassDeclarations models
+
+        let usings =
+            namespaces
+            |> Seq.distinct
+            |> Seq.map CommonFeatures.composeDotSeparatedNamespace
+            |> Seq.map (fun x ->
+                   { LineIndentCount = 0
+                     LineContent = "import \"./" + x + ".ts\"" })
+            |> Seq.toList
 
         let directives =
-            [ { //{ LineIndentCount = 0
-                //    LineContent = "import \"./my-module.ts\"" }
-                //  emptyLine
-                LineIndentCount = 0
+            [ emptyLine
+              { LineIndentCount = 0
                 LineContent = "namespace " + nsString + " {" } ]
 
         let namespaceClosingLines =
             [ { LineIndentCount = 0
                 LineContent = "}" } ]
 
-        let classDeclarationLines = generateClassDeclarations models
         let sourceFileLines =
-            directives @ classDeclarationLines @ namespaceClosingLines
+            usings @ directives @ lines @ namespaceClosingLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition) =
