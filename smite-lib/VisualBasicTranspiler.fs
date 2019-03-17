@@ -15,9 +15,10 @@ module VisualBasicTranspiler =
             |> List.map (fun x ->
                    { LineIndentCount = 0
                      LineContent = "' " + x })
-        convertIndentedLinesToString(lines, indentSpaces)
+        convertIndentedLinesToString (lines, indentSpaces)
 
-    let transpile (models : seq<NamespaceDefinition>, timeProvider : ITimeProvider) =
+    let transpile (models : seq<NamespaceDefinition>,
+                   timeProvider : ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
         let syntaxGenerator =
             SyntaxGenerator.GetGenerator

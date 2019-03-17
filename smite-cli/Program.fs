@@ -48,7 +48,7 @@ let main argv =
             | SupportedProgrammingLanguage.CSharp ->
                 CSharpTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.FSharp ->
-                FSharpTranspiler.transpile (models)
+                FSharpTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.VisualBasic ->
                 VisualBasicTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.TypeScript ->

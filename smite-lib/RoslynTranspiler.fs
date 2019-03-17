@@ -72,7 +72,7 @@ module RoslynTranspiler =
 
     let generateSourceFileCode (syntaxGenerator : SyntaxGenerator,
                                 ns : string [], model : ModelDefinition,
-                                comments: string) =
+                                comments : string) =
         let namespaces, namespaceDeclaration =
             generateNamespaceDeclaration (syntaxGenerator, ns, model)
         let namespaceDeclarations = [ namespaceDeclaration ]
@@ -91,21 +91,21 @@ module RoslynTranspiler =
     let transpileModelDefinition (syntaxGenerator : SyntaxGenerator,
                                   fileExtension : string, ns : string [],
                                   fs : string [], model : ModelDefinition,
-                                  comments: string) =
+                                  comments : string) =
         let sourceFileName = model.Name + fileExtension
         let relativeFilePath = Array.append fs [| sourceFileName |]
         { RelativeFilePath = relativeFilePath
-          FileContent = generateSourceFileCode (syntaxGenerator, ns, model, comments) }
+          FileContent =
+              generateSourceFileCode (syntaxGenerator, ns, model, comments) }
 
     let transpileFilespaceDefinition (syntaxGenerator : SyntaxGenerator,
                                       fileExtension : string,
                                       filespaceDefinition : FilespaceDefinition,
-                                      comments: string) =
+                                      comments : string) =
         filespaceDefinition.Models
         |> Seq.map
                (fun x ->
                transpileModelDefinition
                    (syntaxGenerator, fileExtension,
                     filespaceDefinition.Namespace, filespaceDefinition.Filespace,
-                    x,
-                    comments))
+                    x, comments))

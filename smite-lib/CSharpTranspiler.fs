@@ -26,7 +26,7 @@ module CSharpTranspiler =
                      LineContent = x })
 
         let lines = firstLines @ middleLines @ lastLines
-        convertIndentedLinesToString(lines, indentSpaces)
+        convertIndentedLinesToString (lines, indentSpaces)
 
     let transpile (models : seq<NamespaceDefinition>,
                    timeProvider : ITimeProvider) =
