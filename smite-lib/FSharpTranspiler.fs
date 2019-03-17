@@ -2,9 +2,27 @@ namespace TIKSN.smite.lib
 
 module FSharpTranspiler =
     open IndentationFeatures
+    open TIKSN.Time
 
     let fileExtension = ".fs"
     let indentSpaces = 4
+
+    let getLeadingFileComments (timeProvider : ITimeProvider) =
+        let firstLines =
+            [ { LineIndentCount = 0
+                LineContent = "(*" } ]
+
+        let lastLines =
+            [ { LineIndentCount = 0
+                LineContent = "*)" } ]
+
+        let middleLines =
+            CommonFeatures.getFileComment (timeProvider)
+            |> List.map (fun x ->
+                   { LineIndentCount = 0
+                     LineContent = x })
+
+        firstLines @ middleLines @ lastLines @ [ emptyLine ]
 
     let getSpecialType (t : PrimitiveType) =
         match t with
@@ -79,7 +97,8 @@ module FSharpTranspiler =
         (namespaces, lines)
 
     let generateSourceFileCode (ns : string [], moduleName : string,
-                                models : ModelDefinition []) =
+                                models : ModelDefinition [],
+                                comments : IndentedLine list) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
         let namespaces, lines = generateClassDeclarations models
 
@@ -99,10 +118,11 @@ module FSharpTranspiler =
                      LineContent = "open " + x })
             |> Seq.toList
 
-        let sourceFileLines = directives @ usings @ lines
+        let sourceFileLines = comments @ directives @ usings @ lines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition) =
+    let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition,
+                                      comments : IndentedLine list) =
         let filePath =
             CommonFeatures.getFilePathWithExtension
                 (filespaceDefinition, fileExtension)
@@ -110,12 +130,14 @@ module FSharpTranspiler =
         let sourceFileCode =
             generateSourceFileCode
                 (filespaceDefinition.Namespace, moduleName,
-                 filespaceDefinition.Models)
+                 filespaceDefinition.Models, comments)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (models : seq<NamespaceDefinition>) =
+    let transpile (models : seq<NamespaceDefinition>,
+                   timeProvider : ITimeProvider) =
+        let comments = getLeadingFileComments (timeProvider)
         let filespaceDefinitions =
             CommonFeatures.getFilespaceDefinitions (models)
         filespaceDefinitions
-        |> Seq.map (fun x -> transpileFilespaceDefinition x)
+        |> Seq.map (fun x -> transpileFilespaceDefinition (x, comments))

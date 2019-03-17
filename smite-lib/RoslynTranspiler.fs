@@ -3,6 +3,7 @@ namespace TIKSN.smite.lib
 module RoslynTranspiler =
     open Microsoft.CodeAnalysis
     open Microsoft.CodeAnalysis.Editing
+    open System
 
     let getSpecialType (t : PrimitiveType) =
         match t with
@@ -70,7 +71,8 @@ module RoslynTranspiler =
         (namespaces, syntaxNode)
 
     let generateSourceFileCode (syntaxGenerator : SyntaxGenerator,
-                                ns : string [], model : ModelDefinition) =
+                                ns : string [], model : ModelDefinition,
+                                comments : string) =
         let namespaces, namespaceDeclaration =
             generateNamespaceDeclaration (syntaxGenerator, ns, model)
         let namespaceDeclarations = [ namespaceDeclaration ]
@@ -84,23 +86,26 @@ module RoslynTranspiler =
         let directives = usingDirectives @ namespaceDeclarations
         let newNode =
             syntaxGenerator.CompilationUnit(directives).NormalizeWhitespace()
-        newNode.ToString()
+        comments + Environment.NewLine + newNode.ToString()
 
     let transpileModelDefinition (syntaxGenerator : SyntaxGenerator,
                                   fileExtension : string, ns : string [],
-                                  fs : string [], model : ModelDefinition) =
+                                  fs : string [], model : ModelDefinition,
+                                  comments : string) =
         let sourceFileName = model.Name + fileExtension
         let relativeFilePath = Array.append fs [| sourceFileName |]
         { RelativeFilePath = relativeFilePath
-          FileContent = generateSourceFileCode (syntaxGenerator, ns, model) }
+          FileContent =
+              generateSourceFileCode (syntaxGenerator, ns, model, comments) }
 
     let transpileFilespaceDefinition (syntaxGenerator : SyntaxGenerator,
                                       fileExtension : string,
-                                      filespaceDefinition : FilespaceDefinition) =
+                                      filespaceDefinition : FilespaceDefinition,
+                                      comments : string) =
         filespaceDefinition.Models
         |> Seq.map
                (fun x ->
                transpileModelDefinition
                    (syntaxGenerator, fileExtension,
                     filespaceDefinition.Namespace, filespaceDefinition.Filespace,
-                    x))
+                    x, comments))

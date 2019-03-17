@@ -3,10 +3,23 @@ namespace TIKSN.smite.lib
 module VisualBasicTranspiler =
     open Microsoft.CodeAnalysis.Editing
     open Microsoft.CodeAnalysis
+    open TIKSN.Time
+    open IndentationFeatures
 
     let fileExtension = ".vb"
+    let indentSpaces = 4
 
-    let transpile (models : seq<NamespaceDefinition>) =
+    let getLeadingFileComments (timeProvider : ITimeProvider) =
+        let lines =
+            CommonFeatures.getFileComment (timeProvider)
+            |> List.map (fun x ->
+                   { LineIndentCount = 0
+                     LineContent = "' " + x })
+        convertIndentedLinesToString (lines, indentSpaces)
+
+    let transpile (models : seq<NamespaceDefinition>,
+                   timeProvider : ITimeProvider) =
+        let comments = getLeadingFileComments (timeProvider)
         let syntaxGenerator =
             SyntaxGenerator.GetGenerator
                 (new AdhocWorkspace(), LanguageNames.VisualBasic)
@@ -16,4 +29,4 @@ module VisualBasicTranspiler =
         |> Seq.collect
                (fun x ->
                RoslynTranspiler.transpileFilespaceDefinition
-                   (syntaxGenerator, fileExtension, x))
+                   (syntaxGenerator, fileExtension, x, comments))

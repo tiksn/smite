@@ -46,13 +46,13 @@ let main argv =
         let files =
             match lang with
             | SupportedProgrammingLanguage.CSharp ->
-                CSharpTranspiler.transpile (models)
+                CSharpTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.FSharp ->
-                FSharpTranspiler.transpile (models)
+                FSharpTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.VisualBasic ->
-                VisualBasicTranspiler.transpile (models)
+                VisualBasicTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.TypeScript ->
-                TypeScriptTranspiler.transpile (models)
+                TypeScriptTranspiler.transpile (models, timeProvider)
         saveSourceFiles (outputFolderAbsolutePath, files)
         printfn "Writing models %s source files into %s" langName
             outputFolderAbsolutePath
