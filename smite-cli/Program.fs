@@ -46,11 +46,11 @@ let main argv =
         let files =
             match lang with
             | SupportedProgrammingLanguage.CSharp ->
-                CSharpTranspiler.transpile (models)
+                CSharpTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.FSharp ->
                 FSharpTranspiler.transpile (models)
             | SupportedProgrammingLanguage.VisualBasic ->
-                VisualBasicTranspiler.transpile (models)
+                VisualBasicTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.TypeScript ->
                 TypeScriptTranspiler.transpile (models)
         saveSourceFiles (outputFolderAbsolutePath, files)
