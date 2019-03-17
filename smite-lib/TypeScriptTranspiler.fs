@@ -3,9 +3,27 @@ namespace TIKSN.smite.lib
 module TypeScriptTranspiler =
     open IndentationFeatures
     open System.IO
+    open TIKSN.Time
 
     let fileExtension = ".ts"
     let indentSpaces = 4
+
+    let getLeadingFileComments (timeProvider : ITimeProvider) =
+        let firstLines =
+            [ { LineIndentCount = 0
+                LineContent = "/*" } ]
+
+        let lastLines =
+            [ { LineIndentCount = 0
+                LineContent = "*/" } ]
+
+        let middleLines =
+            CommonFeatures.getFileComment (timeProvider)
+            |> List.map (fun x ->
+                   { LineIndentCount = 1
+                     LineContent = x })
+
+        firstLines @ middleLines @ lastLines @ [ emptyLine ]
 
     let getSpecialType (t : PrimitiveType) =
         match t with
@@ -80,7 +98,8 @@ module TypeScriptTranspiler =
         (namespaces, lines)
 
     let generateSourceFileCode (ns : string [], models : ModelDefinition [],
-                                getFilespace : string [] -> FilespaceDefinition) =
+                                getFilespace : string [] -> FilespaceDefinition,
+                                comments : IndentedLine list) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
         let namespaces, lines = generateClassDeclarations models
 
@@ -97,9 +116,13 @@ module TypeScriptTranspiler =
                      LineContent = "import \"./" + x + ".ts\"" })
             |> Seq.toList
 
+        let usingsWithEmptyLine =
+            match usings.Length with
+            | 0 -> usings
+            | _ -> usings @ [ emptyLine ]
+
         let directives =
-            [ emptyLine
-              { LineIndentCount = 0
+            [ { LineIndentCount = 0
                 LineContent = "namespace " + nsString + " {" } ]
 
         let namespaceClosingLines =
@@ -107,22 +130,25 @@ module TypeScriptTranspiler =
                 LineContent = "}" } ]
 
         let sourceFileLines =
-            usings @ directives @ lines @ namespaceClosingLines
+            comments
+            @ usingsWithEmptyLine @ directives @ lines @ namespaceClosingLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition,
-                                      getFilespace) =
+                                      getFilespace, comments : IndentedLine list) =
         let filePath =
             CommonFeatures.getFilePathWithExtension
                 (filespaceDefinition, fileExtension)
         let sourceFileCode =
             generateSourceFileCode
                 (filespaceDefinition.Namespace, filespaceDefinition.Models,
-                 getFilespace)
+                 getFilespace, comments)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (models : seq<NamespaceDefinition>) =
+    let transpile (models : seq<NamespaceDefinition>,
+                   timeProvider : ITimeProvider) =
+        let comments = getLeadingFileComments (timeProvider)
         let filespaceDefinitions =
             CommonFeatures.getFilespaceDefinitions (models)
 
@@ -131,4 +157,6 @@ module TypeScriptTranspiler =
             |> Seq.filter (fun x -> x.Namespace = ns)
             |> Seq.exactlyOne
         filespaceDefinitions
-        |> Seq.map (fun x -> transpileFilespaceDefinition (x, getFilespace))
+        |> Seq.map
+               (fun x ->
+               transpileFilespaceDefinition (x, getFilespace, comments))

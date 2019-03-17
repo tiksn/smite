@@ -52,7 +52,7 @@ let main argv =
             | SupportedProgrammingLanguage.VisualBasic ->
                 VisualBasicTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.TypeScript ->
-                TypeScriptTranspiler.transpile (models)
+                TypeScriptTranspiler.transpile (models, timeProvider)
         saveSourceFiles (outputFolderAbsolutePath, files)
         printfn "Writing models %s source files into %s" langName
             outputFolderAbsolutePath
