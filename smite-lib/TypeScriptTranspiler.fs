@@ -148,7 +148,7 @@ module TypeScriptTranspiler =
                    timeProvider : ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
         let filespaceDefinitions =
-            CommonFeatures.getFilespaceDefinitions (models)
+            CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (models)
 
         let getFilespace (ns : string []) =
             filespaceDefinitions
