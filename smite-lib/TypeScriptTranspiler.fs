@@ -135,7 +135,7 @@ module TypeScriptTranspiler =
     let transpileFilespaceDefinition (filespaceDefinition : MultiNamespaceFilespaceDefinition,
                                       getFilespace, comments : IndentedLine list) =
         let filePath =
-            CommonFeatures.getFilePathWithExtension
+            CommonFeatures.getFilePathWithExtensionForMultiNamespace
                 (filespaceDefinition, fileExtension)
         let sourceFileCode =
             generateSourceFileCode
