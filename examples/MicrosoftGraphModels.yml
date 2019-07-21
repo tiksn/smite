@@ -30,6 +30,11 @@ models:
         type: integer
       - name: ContentHash
         type: string
+      - name: DocumentSerialNumber
+        namespace:
+          - Google
+          - Inventory
+        type: SerialNumber
   - name: DocumentRetrievalStatistics
     fields:
       - name: ID
@@ -56,4 +61,16 @@ models:
         type: DocumentRetrievalStatistics
       - name: LastYearStatistics
         type: DocumentRetrievalStatistics
+...
+---
+namespace:
+  - Google
+  - Inventory
+models:
+  - name: SerialNumber
+    fields:
+    - name: SerialPrefix
+      type: string
+    - name: NumberSuffix
+      type: integer
 ...
