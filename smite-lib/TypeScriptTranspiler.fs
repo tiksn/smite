@@ -98,7 +98,7 @@ module TypeScriptTranspiler =
         (namespaces, lines)
 
     let generateSourceFileCode (ns : string [], models : ModelDefinition [],
-                                getFilespace : string [] -> FilespaceDefinition,
+                                getFilespace : string [] -> MultiNamespaceFilespaceDefinition,
                                 comments : IndentedLine list) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
         let namespaces, lines = generateClassDeclarations models
@@ -132,7 +132,7 @@ module TypeScriptTranspiler =
             @ usingsWithEmptyLine @ directives @ lines @ namespaceClosingLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition : FilespaceDefinition,
+    let transpileFilespaceDefinition (filespaceDefinition : MultiNamespaceFilespaceDefinition,
                                       getFilespace, comments : IndentedLine list) =
         let filePath =
             CommonFeatures.getFilePathWithExtension
