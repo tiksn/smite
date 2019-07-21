@@ -113,7 +113,7 @@ module TypeScriptTranspiler =
             |> Seq.map Path.Combine
             |> Seq.map (fun x ->
                    { LineIndentCount = 0
-                     LineContent = "import \"./" + x + ".ts\"" })
+                     LineContent = "import \"./" + x + "\"" })
             |> Seq.toList
 
         let usingsWithEmptyLine =
