@@ -123,7 +123,7 @@ module TypeScriptTranspiler =
 
         let directives =
             [ { LineIndentCount = 0
-                LineContent = "namespace " + nsString + " {" } ]
+                LineContent = "export namespace " + nsString + " {" } ]
 
         let namespaceClosingLines =
             [ { LineIndentCount = 0
