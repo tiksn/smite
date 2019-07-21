@@ -50,6 +50,13 @@ module CommonFeatures =
                      |> Seq.toArray
                  Models = x.Models })
 
+    let getFilespaceDefinitionsForRootOnlyNamespaces (namespaceDefinitions : seq<NamespaceDefinition>) =
+        namespaceDefinitions
+        |> Seq.groupBy (fun x -> x.Namespace.[0])
+        |> Seq.map (fun (ns, nsds) ->
+               { Namespaces = nsds |> Seq.toArray
+                 Filespace = [| ns |] })
+
     let composeDotSeparatedNamespace (ns : string []) = String.Join(".", ns)
 
     let rec getFilespacesWithExtension (filespaces : string list,
@@ -59,7 +66,7 @@ module CommonFeatures =
         | hd :: tl -> hd :: getFilespacesWithExtension (tl, fileExtension)
         | _ -> failwith "Empty list."
 
-    let getFilePathWithExtension (filespaceDefinition : FilespaceDefinition,
+    let getFilePathWithExtension (filespaceDefinition : SingleNamespaceFilespaceDefinition,
                                   fileExtension) =
         let filespacesWithExtension =
             getFilespacesWithExtension
