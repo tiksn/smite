@@ -107,9 +107,7 @@ module TypeScriptTranspiler =
             namespaces
             |> Seq.distinct
             |> Seq.map getFilespace
-            |> Seq.map
-                   (fun x ->
-                   CommonFeatures.getFilePathWithExtension (x, fileExtension))
+            |> Seq.map (fun x -> x.Filespace)
             |> Seq.map Path.Combine
             |> Seq.map (fun x ->
                    { LineIndentCount = 0
