@@ -116,7 +116,13 @@ module TypeScriptTranspiler =
                                 getFilespaces, comments : IndentedLine list) =
         let usings =
             filespaceDefinition.Namespaces
-            |> Seq.map (fun x -> x.Namespace)
+            |> Seq.collect (fun x -> x.Models)
+            |> Seq.collect (fun x -> x.Fields)
+            |> Seq.choose (fun x ->
+                   match x.Type with
+                   | ComplexTypeDifferentNamespace(nsArray, typeName) ->
+                       Some nsArray
+                   | _ -> None)
             |> Seq.distinct
             |> Seq.map getFilespaces
             |> Seq.collect (fun x -> x)
