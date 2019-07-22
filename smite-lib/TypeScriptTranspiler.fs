@@ -41,12 +41,17 @@ module TypeScriptTranspiler =
 
     let generateFieldCode (fieldDefinition : FieldDefinition) =
         let ns, tn = getFieldTypeSyntaxNode (fieldDefinition.Type)
-        let atn = tn + "[]"
+
+        let fullTypeName =
+            match ns with
+            | Some x ->
+                CommonFeatures.composeDotSeparatedNamespace (x) + "." + tn
+            | None -> tn
 
         let t =
             match fieldDefinition.IsArray with
-            | true -> atn
-            | false -> tn
+            | true -> fullTypeName + "[]"
+            | false -> fullTypeName
 
         let line =
             { LineIndentCount = 2
