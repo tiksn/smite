@@ -97,18 +97,32 @@ module TypeScriptTranspiler =
 
         (namespaces, lines)
 
-    let generateSourceFileCode (ns : string [], models : ModelDefinition [],
-                                getFilespace : string [] -> MultiNamespaceFilespaceDefinition,
-                                comments : IndentedLine list) =
-        let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
-        let namespaces, lines = generateClassDeclarations models
+    let generateNamespaceDeclaration (ns : NamespaceDefinition) =
+        let nsString =
+            CommonFeatures.composeDotSeparatedNamespace (ns.Namespace)
+        let namespaces, lines = generateClassDeclarations ns.Models
 
+        let directives =
+            [ { LineIndentCount = 0
+                LineContent = "export namespace " + nsString + " {" } ]
+
+        let namespaceClosingLines =
+            [ { LineIndentCount = 0
+                LineContent = "}" } ]
+
+        directives @ lines @ namespaceClosingLines
+
+    let generateSourceFileCode (filespaceDefinition : MultiNamespaceFilespaceDefinition,
+                                getFilespaces, comments : IndentedLine list) =
         let usings =
-            namespaces
+            filespaceDefinition.Namespaces
+            |> Seq.map (fun x -> x.Namespace)
             |> Seq.distinct
-            |> Seq.map getFilespace
+            |> Seq.map getFilespaces
+            |> Seq.collect (fun x -> x)
             |> Seq.map (fun x -> x.Filespace)
-            |> Seq.map Path.Combine
+            |> Seq.distinct
+            |> Seq.map (fun x -> x.[0])
             |> Seq.map (fun x ->
                    { LineIndentCount = 0
                      LineContent = "import \"./" + x + "\"" })
@@ -119,28 +133,24 @@ module TypeScriptTranspiler =
             | 0 -> usings
             | _ -> usings @ [ emptyLine ]
 
-        let directives =
-            [ { LineIndentCount = 0
-                LineContent = "export namespace " + nsString + " {" } ]
+        let namespacesLines =
+            filespaceDefinition.Namespaces
+            |> Seq.map (fun x -> generateNamespaceDeclaration x)
+            |> Seq.collect (fun x -> x)
+            |> Seq.toList
 
-        let namespaceClosingLines =
-            [ { LineIndentCount = 0
-                LineContent = "}" } ]
-
-        let sourceFileLines =
-            comments
-            @ usingsWithEmptyLine @ directives @ lines @ namespaceClosingLines
+        let sourceFileLines = comments @ usingsWithEmptyLine @ namespacesLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition (filespaceDefinition : MultiNamespaceFilespaceDefinition,
-                                      getFilespace, comments : IndentedLine list) =
+                                      getFilespaces,
+                                      comments : IndentedLine list) =
         let filePath =
             CommonFeatures.getFilePathWithExtensionForMultiNamespace
                 (filespaceDefinition, fileExtension)
         let sourceFileCode =
             generateSourceFileCode
-                (filespaceDefinition.Namespace, filespaceDefinition.Models,
-                 getFilespace, comments)
+                (filespaceDefinition, getFilespaces, comments)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
@@ -149,12 +159,11 @@ module TypeScriptTranspiler =
         let comments = getLeadingFileComments (timeProvider)
         let filespaceDefinitions =
             CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (models)
-
-        let getFilespace (ns : string []) =
-            filespaceDefinitions
-            |> Seq.filter (fun x -> x.Namespace = ns)
-            |> Seq.exactlyOne
+        let containsInList (filespaceDefinition : MultiNamespaceFilespaceDefinition)
+            (ns : string []) = true
+        let getFilespaces (ns : string []) =
+            filespaceDefinitions |> Seq.filter (fun x -> containsInList x ns)
         filespaceDefinitions
         |> Seq.map
                (fun x ->
-               transpileFilespaceDefinition (x, getFilespace, comments))
+               transpileFilespaceDefinition (x, getFilespaces, comments))
