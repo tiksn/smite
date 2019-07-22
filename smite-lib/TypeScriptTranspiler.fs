@@ -159,10 +159,13 @@ module TypeScriptTranspiler =
         let comments = getLeadingFileComments (timeProvider)
         let filespaceDefinitions =
             CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (models)
-        let containsInList (filespaceDefinition : MultiNamespaceFilespaceDefinition)
-            (ns : string []) = true
+
         let getFilespaces (ns : string []) =
-            filespaceDefinitions |> Seq.filter (fun x -> containsInList x ns)
+            filespaceDefinitions
+            |> Seq.where (fun x ->
+                   x.Namespaces
+                   |> Seq.map (fun x -> x.Namespace)
+                   |> Seq.contains ns)
         filespaceDefinitions
         |> Seq.map
                (fun x ->
