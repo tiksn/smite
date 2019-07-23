@@ -20,12 +20,12 @@
 
   <ItemGroup>
     <PackageReference Include="FSharp.Compiler.Service" Version="27.0.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="2.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.1.0" />
     <PackageReference Include="TIKSN-Framework" Version="3.1.0" />
-    <PackageReference Include="YamlDotNet" Version="5.4.0" />
+    <PackageReference Include="YamlDotNet" Version="6.1.2" />
   </ItemGroup>
 
   <ItemGroup>
