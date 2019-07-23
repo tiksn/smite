@@ -3,32 +3,68 @@
   "Id": "cfeaaaa7-9ef3-41c5-8b0c-258d151101f1",
   "Items": [
     {
-      "Id": "d5540261-7c2e-4bf3-8c42-a0b1381535ee",
-      "Command": "--lang visualbasic"
-    },
-    {
-      "Id": "30a5464f-955d-490e-91ae-c6958bed2fb8",
-      "Command": "--lang csharp"
-    },
-    {
-      "Id": "aab0745c-ef03-4d65-b142-cd11a91b7b41",
-      "Command": "--lang fsharp"
-    },
-    {
-      "Id": "69929275-ff0a-49e3-9376-eee52a5bb502",
-      "Command": "--lang typescript"
-    },
-    {
-      "Id": "944d0f49-e68b-4ab0-bab9-c995ee0aa862",
-      "Command": "--invalid-param"
-    },
-    {
       "Id": "d9fbba8f-3dca-4a39-a0a6-4898c786429d",
       "Command": "--input-file ..\\..\\..\\..\\examples\\MicrosoftGraphModels.yml"
     },
     {
-      "Id": "0c8b8b15-7238-4947-b1df-4cdf508d6e54",
-      "Command": "--output-folder ..\\..\\..\\..\\.trash\\models"
+      "Id": "429c4539-be25-496f-bd9c-434456de23eb",
+      "Command": "C#",
+      "Items": [
+        {
+          "Id": "30a5464f-955d-490e-91ae-c6958bed2fb8",
+          "Command": "--lang csharp"
+        },
+        {
+          "Id": "9ebcdea0-459d-4cd7-a0d8-3e80d91498b9",
+          "Command": "--output-folder ..\\..\\..\\..\\.trash\\CSharpModels"
+        }
+      ]
+    },
+    {
+      "Id": "574d71e9-61f6-4a7a-98e7-9f81109f3e58",
+      "Command": "F#",
+      "Items": [
+        {
+          "Id": "aab0745c-ef03-4d65-b142-cd11a91b7b41",
+          "Command": "--lang fsharp"
+        },
+        {
+          "Id": "7ef2968a-62af-49d3-85ca-8686a892ff08",
+          "Command": "--output-folder ..\\..\\..\\..\\.trash\\FSharpModels"
+        }
+      ]
+    },
+    {
+      "Id": "d53f93e3-c5a2-4765-a31b-599ea62f4e42",
+      "Command": "VisualBasic",
+      "Items": [
+        {
+          "Id": "d5540261-7c2e-4bf3-8c42-a0b1381535ee",
+          "Command": "--lang visualbasic"
+        },
+        {
+          "Id": "7252aacc-b94a-43fc-aa46-d7db2d72ec63",
+          "Command": "--output-folder ..\\..\\..\\..\\.trash\\VisualBasicModels"
+        }
+      ]
+    },
+    {
+      "Id": "01b69b37-5c52-43c5-b82f-d63312899fe3",
+      "Command": "TypeScript",
+      "Items": [
+        {
+          "Id": "69929275-ff0a-49e3-9376-eee52a5bb502",
+          "Command": "--lang typescript"
+        },
+        {
+          "Id": "0c8b8b15-7238-4947-b1df-4cdf508d6e54",
+          "Command": "--output-folder ..\\..\\..\\..\\.trash\\TypeScriptModels"
+        }
+      ]
+    },
+    {
+      "Id": "944d0f49-e68b-4ab0-bab9-c995ee0aa862",
+      "Command": "--invalid-param"
     },
     {
       "Id": "2db6527c-a818-45b8-8a27-b66a858b9822",
