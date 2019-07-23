@@ -31,15 +31,10 @@ module TypeScriptTranspiler =
         | PrimitiveType.RealType -> "number"
         | PrimitiveType.StringType -> "string"
 
-    let getFieldTypeSyntaxNode (fieldType : FieldType) =
-        match fieldType with
-        | PrimitiveType primitiveType -> (None, getSpecialType (primitiveType))
-        | ComplexTypeSameNamespace typeName -> (None, typeName)
-        | ComplexTypeDifferentNamespace(nsArray, typeName) ->
-            (Some nsArray, typeName)
-
     let generateFieldCode (fieldDefinition : FieldDefinition) =
-        let ns, tn = getFieldTypeSyntaxNode (fieldDefinition.Type)
+        let ns, tn =
+            CommonFeatures.getFieldTypeSyntaxNode
+                (fieldDefinition.Type, getSpecialType)
 
         let fullTypeName =
             match ns with
