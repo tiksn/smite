@@ -13,8 +13,8 @@
     <Company>TIKSN Lab</Company>
     <Product>smite</Product>
     <Version>1.6.0</Version>
-    <PackageLicenseUrl>https://github.com/tiksn/smite/blob/develop/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/tiksn/smite</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
