@@ -113,7 +113,8 @@ module TypeScriptTranspiler =
 
         let namespaceClosingLines =
             [ { LineIndentCount = 0
-                LineContent = "}" } ]
+                LineContent = "}" }
+              emptyLine ]
 
         directives @ lines @ namespaceClosingLines
 
