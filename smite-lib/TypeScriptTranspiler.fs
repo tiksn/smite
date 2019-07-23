@@ -2,7 +2,6 @@ namespace TIKSN.smite.lib
 
 module TypeScriptTranspiler =
     open IndentationFeatures
-    open System.IO
     open TIKSN.Time
 
     let fileExtension = ".ts"
@@ -118,27 +117,36 @@ module TypeScriptTranspiler =
 
         directives @ lines @ namespaceClosingLines
 
+    let generateSourceFileCodePerNamespace (namespaceDefinition : NamespaceDefinition,
+                                            getFilespaces) =
+        namespaceDefinition.Models
+        |> Seq.collect (fun x -> x.Fields)
+        |> Seq.choose (fun x ->
+               match x.Type with
+               | ComplexTypeDifferentNamespace(nsArray, typeName) ->
+                   Some nsArray
+                   if nsArray.[0] <> namespaceDefinition.Namespace.[0] then
+                       Some nsArray
+                   else None
+               | _ -> None)
+        |> Seq.distinct
+        |> Seq.map getFilespaces
+        |> Seq.collect (fun x -> x)
+        |> Seq.map (fun x -> x.Filespace)
+        |> Seq.distinct
+        |> Seq.map (fun x -> x.[0])
+        |> Seq.map (fun x ->
+               { LineIndentCount = 0
+                 LineContent = "import { " + x + " } from \"./" + x + "\"" })
+
     let generateSourceFileCode (filespaceDefinition : MultiNamespaceFilespaceDefinition,
                                 getFilespaces, comments : IndentedLine list) =
         let usings =
             filespaceDefinition.Namespaces
-            |> Seq.collect (fun x -> x.Models)
-            |> Seq.collect (fun x -> x.Fields)
-            |> Seq.choose (fun x ->
-                   match x.Type with
-                   | ComplexTypeDifferentNamespace(nsArray, typeName) ->
-                       Some nsArray
-                   | _ -> None)
-            |> Seq.distinct
-            |> Seq.map getFilespaces
-            |> Seq.collect (fun x -> x)
-            |> Seq.map (fun x -> x.Filespace)
-            |> Seq.distinct
-            |> Seq.map (fun x -> x.[0])
             |> Seq.map
                    (fun x ->
-                   { LineIndentCount = 0
-                     LineContent = "import { " + x + " } from \"./" + x + "\"" })
+                   generateSourceFileCodePerNamespace (x, getFilespaces))
+            |> Seq.collect (fun x -> x)
             |> Seq.toList
 
         let usingsWithEmptyLine =
