@@ -31,15 +31,10 @@ module FSharpTranspiler =
         | PrimitiveType.RealType -> "double"
         | PrimitiveType.StringType -> "string"
 
-    let getFieldTypeSyntaxNode (fieldType : FieldType) =
-        match fieldType with
-        | PrimitiveType primitiveType -> (None, getSpecialType (primitiveType))
-        | ComplexTypeSameNamespace typeName -> (None, typeName)
-        | ComplexTypeDifferentNamespace(nsArray, typeName) ->
-            (Some nsArray, typeName)
-
     let generateFieldCode (fieldDefinition : FieldDefinition) =
-        let ns, tn = getFieldTypeSyntaxNode (fieldDefinition.Type)
+        let ns, tn =
+            CommonFeatures.getFieldTypeSyntaxNode
+                (fieldDefinition.Type, getSpecialType)
         let atn = tn + " []"
 
         let t =

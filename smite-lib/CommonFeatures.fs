@@ -13,6 +13,13 @@ module CommonFeatures =
               "File is generated via smite, DTO transpiler (https://github.com/tiksn/smite) on %s"
               time ]
 
+    let getFieldTypeSyntaxNode (fieldType : FieldType, getSpecialType) =
+        match fieldType with
+        | PrimitiveType primitiveType -> (None, getSpecialType (primitiveType))
+        | ComplexTypeSameNamespace typeName -> (None, typeName)
+        | ComplexTypeDifferentNamespace(nsArray, typeName) ->
+            (Some nsArray, typeName)
+
     let getStartSegments (ns : string [], startingSegmentsCount) =
         let left, _ = ns |> Array.splitAt (startingSegmentsCount)
         left
