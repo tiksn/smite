@@ -100,7 +100,7 @@ module RoslynTranspiler =
 
     let transpileFilespaceDefinition (syntaxGenerator : SyntaxGenerator,
                                       fileExtension : string,
-                                      filespaceDefinition : FilespaceDefinition,
+                                      filespaceDefinition : SingleNamespaceFilespaceDefinition,
                                       comments : string) =
         filespaceDefinition.Models
         |> Seq.map

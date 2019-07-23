@@ -24,10 +24,14 @@ type NamespaceDefinition =
     { Namespace : string []
       Models : ModelDefinition [] }
 
-type FilespaceDefinition =
+type SingleNamespaceFilespaceDefinition =
     { Namespace : string []
       Filespace : string []
       Models : ModelDefinition [] }
+
+type MultiNamespaceFilespaceDefinition =
+    { Filespace : string []
+      Namespaces : NamespaceDefinition [] }
 
 type SourceFile =
     { RelativeFilePath : string []
