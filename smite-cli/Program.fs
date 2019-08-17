@@ -11,10 +11,6 @@ type SupportedProgrammingLanguage =
     | VisualBasic = 3
     | TypeScript = 4
 
-type FieldKind =
-    | Field = 1
-    | Property = 2
-
 type CLIArguments =
     | [<Mandatory>] Input_File of string
     | [<Mandatory>] Output_Folder of string
