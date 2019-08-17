@@ -1,8 +1,5 @@
 namespace TIKSN.smite.lib
 
-
-
-
 [<AutoOpen>]
 module Saving =
     open System.IO
