@@ -6,6 +6,10 @@ type PrimitiveType =
     | RealType
     | BooleanType
 
+type FieldKind =
+    | Field = 1
+    | Property = 2
+
 type FieldType =
     | PrimitiveType of PrimitiveType
     | ComplexTypeSameNamespace of string
