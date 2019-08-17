@@ -35,10 +35,10 @@ module RoslynTranspiler =
             | FieldKind.Property ->
                 [ syntaxGenerator.FieldDeclaration(backfieldName, t, Accessibility.Private)
                   syntaxGenerator.PropertyDeclaration
-                      (fieldDefinition.Name, t, Accessibility.Public, DeclarationModifiers.Virtual,
-                       [ syntaxGenerator.ReturnStatement(syntaxGenerator.IdentifierName(backfieldName)) ],
+                      (fieldDefinition.Name, t, Accessibility.Public, DeclarationModifiers.None,
+                       [ syntaxGenerator.ReturnStatement(syntaxGenerator.MemberAccessExpression(syntaxGenerator.ThisExpression(),syntaxGenerator.IdentifierName(backfieldName))) ],
                        [ syntaxGenerator.AssignmentStatement
-                           (syntaxGenerator.IdentifierName(backfieldName), syntaxGenerator.IdentifierName("value")) ]) ]
+                           (syntaxGenerator.MemberAccessExpression(syntaxGenerator.ThisExpression(), syntaxGenerator.IdentifierName(backfieldName)), syntaxGenerator.IdentifierName("value")) ]) ]
 
         (ns, fd)
 
