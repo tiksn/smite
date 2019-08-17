@@ -19,6 +19,8 @@ type CLIArguments =
     | [<Mandatory>] Input_File of string
     | [<Mandatory>] Output_Folder of string
     | [<Mandatory>] Lang of SupportedProgrammingLanguage
+    | Field of FieldKind
+
     interface IArgParserTemplate with
         member s.Usage =
             match s with
@@ -26,6 +28,7 @@ type CLIArguments =
             | Output_Folder _ ->
                 "Output Folder for model sources files to be generated in."
             | Lang _ -> "Supported Programming Language"
+            | Field _ -> "Filed structure kind"
 
 [<EntryPoint>]
 let main argv =
@@ -41,6 +44,7 @@ let main argv =
         let inputFilePath = results.GetResult(Input_File)
         let outputFolderPath = results.GetResult(Output_Folder)
         let lang = results.GetResult(Lang)
+        let field = results.GetResult(Field, FieldKind.Field)
         let langName = lang.ToString()
         let inputFileAbsolutePath = Path.GetFullPath(inputFilePath)
         let outputFolderAbsolutePath = Path.GetFullPath(outputFolderPath)
