@@ -21,8 +21,7 @@ type CLIArguments =
         member s.Usage =
             match s with
             | Input_File _ -> "Input YAML file"
-            | Output_Folder _ ->
-                "Output Folder for model sources files to be generated in."
+            | Output_Folder _ -> "Output Folder for model sources files to be generated in."
             | Lang _ -> "Supported Programming Language"
             | Field _ -> "Filed structure kind"
 
@@ -35,8 +34,7 @@ let main argv =
     let timeProvider = serviceProvider.GetRequiredService<ITimeProvider>()
     let parser = ArgumentParser.Create<CLIArguments>(programName = "smite")
     try
-        let results =
-            parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
+        let results = parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
         let inputFilePath = results.GetResult(Input_File)
         let outputFolderPath = results.GetResult(Output_Folder)
         let lang = results.GetResult(Lang)
@@ -49,17 +47,12 @@ let main argv =
 
         let files =
             match lang with
-            | SupportedProgrammingLanguage.CSharp ->
-                CSharpTranspiler.transpile (models, timeProvider)
-            | SupportedProgrammingLanguage.FSharp ->
-                FSharpTranspiler.transpile (models, timeProvider)
-            | SupportedProgrammingLanguage.VisualBasic ->
-                VisualBasicTranspiler.transpile (models, timeProvider)
-            | SupportedProgrammingLanguage.TypeScript ->
-                TypeScriptTranspiler.transpile (models, timeProvider)
+            | SupportedProgrammingLanguage.CSharp -> CSharpTranspiler.transpile (models, field, timeProvider)
+            | SupportedProgrammingLanguage.FSharp -> FSharpTranspiler.transpile (models, timeProvider)
+            | SupportedProgrammingLanguage.VisualBasic -> VisualBasicTranspiler.transpile (models, field, timeProvider)
+            | SupportedProgrammingLanguage.TypeScript -> TypeScriptTranspiler.transpile (models, timeProvider)
         saveSourceFiles (outputFolderAbsolutePath, files)
-        printfn "Writing models %s source files into %s" langName
-            outputFolderAbsolutePath
+        printfn "Writing models %s source files into %s" langName outputFolderAbsolutePath
         0
     with e ->
         printfn "%s" e.Message
