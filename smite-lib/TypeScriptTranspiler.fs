@@ -7,7 +7,7 @@ module TypeScriptTranspiler =
     let fileExtension = ".ts"
     let indentSpaces = 4
 
-    let getLeadingFileComments (timeProvider : ITimeProvider) =
+    let getLeadingFileComments (timeProvider: ITimeProvider) =
         let firstLines =
             [ { LineIndentCount = 0
                 LineContent = "/*" } ]
@@ -19,27 +19,24 @@ module TypeScriptTranspiler =
         let middleLines =
             CommonFeatures.getFileComment (timeProvider)
             |> List.map (fun x ->
-                   { LineIndentCount = 1
-                     LineContent = x })
+                { LineIndentCount = 1
+                  LineContent = x })
 
         firstLines @ middleLines @ lastLines @ [ emptyLine ]
 
-    let getSpecialType (t : PrimitiveType) =
+    let getSpecialType (t: PrimitiveType) =
         match t with
         | PrimitiveType.BooleanType -> "boolean"
         | PrimitiveType.IntegerType -> "number"
         | PrimitiveType.RealType -> "number"
         | PrimitiveType.StringType -> "string"
 
-    let generateFieldCode (fieldDefinition : FieldDefinition) =
-        let ns, tn =
-            CommonFeatures.getFieldTypeSyntaxNode
-                (fieldDefinition.Type, getSpecialType)
+    let generateFieldCode (fieldDefinition: FieldDefinition) =
+        let ns, tn = CommonFeatures.getFieldTypeSyntaxNode (fieldDefinition.Type, getSpecialType)
 
         let fullTypeName =
             match ns with
-            | Some x ->
-                CommonFeatures.composeDotSeparatedNamespace (x) + "." + tn
+            | Some x -> CommonFeatures.composeDotSeparatedNamespace (x) + "." + tn
             | None -> tn
 
         let t =
@@ -53,12 +50,12 @@ module TypeScriptTranspiler =
 
         (ns, line)
 
-    let generateFieldsCode (fieldDefinitions : FieldDefinition []) =
+    let generateFieldsCode (fieldDefinitions: FieldDefinition []) =
         fieldDefinitions
         |> Seq.map (fun x -> generateFieldCode (x))
         |> Seq.toList
 
-    let generateClassDeclaration (model : ModelDefinition) =
+    let generateClassDeclaration (model: ModelDefinition) =
         let firstLine =
             { LineIndentCount = 1
               LineContent = "export class " + model.Name + " {" }
@@ -82,7 +79,7 @@ module TypeScriptTranspiler =
         let lines = [ emptyLine; firstLine ] @ members @ [ lastLine ]
         (namespaces, lines)
 
-    let generateClassDeclarations (models : ModelDefinition []) =
+    let generateClassDeclarations (models: ModelDefinition []) =
         let namespaces =
             models
             |> Seq.map generateClassDeclaration
@@ -96,9 +93,8 @@ module TypeScriptTranspiler =
 
         (namespaces, lines)
 
-    let generateNamespaceDeclaration (ns : NamespaceDefinition) =
-        let nsString =
-            CommonFeatures.composeDotSeparatedNamespace (ns.Namespace)
+    let generateNamespaceDeclaration (ns: NamespaceDefinition) =
+        let nsString = CommonFeatures.composeDotSeparatedNamespace (ns.Namespace)
         let namespaces, lines = generateClassDeclarations ns.Models
 
         let directives =
@@ -112,18 +108,16 @@ module TypeScriptTranspiler =
 
         directives @ lines @ namespaceClosingLines
 
-    let generateSourceFileCodePerNamespace (namespaceDefinition : NamespaceDefinition,
-                                            getFilespaces) =
+    let generateSourceFileCodePerNamespace (namespaceDefinition: NamespaceDefinition, getFilespaces) =
         namespaceDefinition.Models
         |> Seq.collect (fun x -> x.Fields)
         |> Seq.choose (fun x ->
-               match x.Type with
-               | ComplexTypeDifferentNamespace(nsArray, typeName) ->
-                   Some nsArray
-                   if nsArray.[0] <> namespaceDefinition.Namespace.[0] then
-                       Some nsArray
-                   else None
-               | _ -> None)
+            match x.Type with
+            | ComplexTypeDifferentNamespace(nsArray, typeName) ->
+                Some nsArray
+                if nsArray.[0] <> namespaceDefinition.Namespace.[0] then Some nsArray
+                else None
+            | _ -> None)
         |> Seq.distinct
         |> Seq.map getFilespaces
         |> Seq.collect (fun x -> x)
@@ -131,16 +125,14 @@ module TypeScriptTranspiler =
         |> Seq.distinct
         |> Seq.map (fun x -> x.[0])
         |> Seq.map (fun x ->
-               { LineIndentCount = 0
-                 LineContent = "import { " + x + " } from \"./" + x + "\"" })
+            { LineIndentCount = 0
+              LineContent = "import { " + x + " } from \"./" + x + "\"" })
 
-    let generateSourceFileCode (filespaceDefinition : MultiNamespaceFilespaceDefinition,
-                                getFilespaces, comments : IndentedLine list) =
+    let generateSourceFileCode (filespaceDefinition: MultiNamespaceFilespaceDefinition, getFilespaces,
+                                comments: IndentedLine list) =
         let usings =
             filespaceDefinition.Namespaces
-            |> Seq.map
-                   (fun x ->
-                   generateSourceFileCodePerNamespace (x, getFilespaces))
+            |> Seq.map (fun x -> generateSourceFileCodePerNamespace (x, getFilespaces))
             |> Seq.collect (fun x -> x)
             |> Seq.toList
 
@@ -158,31 +150,21 @@ module TypeScriptTranspiler =
         let sourceFileLines = comments @ usingsWithEmptyLine @ namespacesLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition : MultiNamespaceFilespaceDefinition,
-                                      getFilespaces,
-                                      comments : IndentedLine list) =
-        let filePath =
-            CommonFeatures.getFilePathWithExtensionForMultiNamespace
-                (filespaceDefinition, fileExtension)
-        let sourceFileCode =
-            generateSourceFileCode
-                (filespaceDefinition, getFilespaces, comments)
+    let transpileFilespaceDefinition (filespaceDefinition: MultiNamespaceFilespaceDefinition, getFilespaces,
+                                      comments: IndentedLine list) =
+        let filePath = CommonFeatures.getFilePathWithExtensionForMultiNamespace (filespaceDefinition, fileExtension)
+        let sourceFileCode = generateSourceFileCode (filespaceDefinition, getFilespaces, comments)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (models : seq<NamespaceDefinition>,
-                   timeProvider : ITimeProvider) =
+    let transpile (models: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
-        let filespaceDefinitions =
-            CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (models)
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (models)
 
-        let getFilespaces (ns : string []) =
+        let getFilespaces (ns: string []) =
             filespaceDefinitions
             |> Seq.where (fun x ->
-                   x.Namespaces
-                   |> Seq.map (fun x -> x.Namespace)
-                   |> Seq.contains ns)
-        filespaceDefinitions
-        |> Seq.map
-               (fun x ->
-               transpileFilespaceDefinition (x, getFilespaces, comments))
+                x.Namespaces
+                |> Seq.map (fun x -> x.Namespace)
+                |> Seq.contains ns)
+        filespaceDefinitions |> Seq.map (fun x -> transpileFilespaceDefinition (x, getFilespaces, comments))

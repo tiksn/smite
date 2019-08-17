@@ -7,7 +7,7 @@ module FSharpTranspiler =
     let fileExtension = ".fs"
     let indentSpaces = 4
 
-    let getLeadingFileComments (timeProvider : ITimeProvider) =
+    let getLeadingFileComments (timeProvider: ITimeProvider) =
         let firstLines =
             [ { LineIndentCount = 0
                 LineContent = "(*" } ]
@@ -19,22 +19,20 @@ module FSharpTranspiler =
         let middleLines =
             CommonFeatures.getFileComment (timeProvider)
             |> List.map (fun x ->
-                   { LineIndentCount = 0
-                     LineContent = x })
+                { LineIndentCount = 0
+                  LineContent = x })
 
         firstLines @ middleLines @ lastLines @ [ emptyLine ]
 
-    let getSpecialType (t : PrimitiveType) =
+    let getSpecialType (t: PrimitiveType) =
         match t with
         | PrimitiveType.BooleanType -> "bool"
         | PrimitiveType.IntegerType -> "int"
         | PrimitiveType.RealType -> "double"
         | PrimitiveType.StringType -> "string"
 
-    let generateFieldCode (fieldDefinition : FieldDefinition) =
-        let ns, tn =
-            CommonFeatures.getFieldTypeSyntaxNode
-                (fieldDefinition.Type, getSpecialType)
+    let generateFieldCode (fieldDefinition: FieldDefinition) =
+        let ns, tn = CommonFeatures.getFieldTypeSyntaxNode (fieldDefinition.Type, getSpecialType)
         let atn = tn + " []"
 
         let t =
@@ -48,12 +46,12 @@ module FSharpTranspiler =
 
         (ns, line)
 
-    let generateFieldsCode (fieldDefinitions : FieldDefinition []) =
+    let generateFieldsCode (fieldDefinitions: FieldDefinition []) =
         fieldDefinitions
         |> Seq.map (fun x -> generateFieldCode (x))
         |> Seq.toList
 
-    let generateClassDeclaration (model : ModelDefinition) =
+    let generateClassDeclaration (model: ModelDefinition) =
         let firstLine =
             { LineIndentCount = 1
               LineContent = "type " + model.Name + " = {" }
@@ -77,7 +75,7 @@ module FSharpTranspiler =
         let lines = [ emptyLine; firstLine ] @ members @ [ lastLine; emptyLine ]
         (namespaces, lines)
 
-    let generateClassDeclarations (models : ModelDefinition []) =
+    let generateClassDeclarations (models: ModelDefinition []) =
         let namespaces =
             models
             |> Seq.map generateClassDeclaration
@@ -91,9 +89,8 @@ module FSharpTranspiler =
 
         (namespaces, lines)
 
-    let generateSourceFileCode (ns : string [], moduleName : string,
-                                models : ModelDefinition [],
-                                comments : IndentedLine list) =
+    let generateSourceFileCode (ns: string [], moduleName: string, models: ModelDefinition [],
+                                comments: IndentedLine list) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
         let namespaces, lines = generateClassDeclarations models
 
@@ -109,30 +106,23 @@ module FSharpTranspiler =
             |> Seq.distinct
             |> Seq.map CommonFeatures.composeDotSeparatedNamespace
             |> Seq.map (fun x ->
-                   { LineIndentCount = 1
-                     LineContent = "open " + x })
+                { LineIndentCount = 1
+                  LineContent = "open " + x })
             |> Seq.toList
 
         let sourceFileLines = comments @ directives @ usings @ lines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition : SingleNamespaceFilespaceDefinition,
-                                      comments : IndentedLine list) =
-        let filePath =
-            CommonFeatures.getFilePathWithExtension
-                (filespaceDefinition, fileExtension)
+    let transpileFilespaceDefinition (filespaceDefinition: SingleNamespaceFilespaceDefinition,
+                                      comments: IndentedLine list) =
+        let filePath = CommonFeatures.getFilePathWithExtension (filespaceDefinition, fileExtension)
         let moduleName = filespaceDefinition.Filespace |> Seq.last
         let sourceFileCode =
-            generateSourceFileCode
-                (filespaceDefinition.Namespace, moduleName,
-                 filespaceDefinition.Models, comments)
+            generateSourceFileCode (filespaceDefinition.Namespace, moduleName, filespaceDefinition.Models, comments)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (models : seq<NamespaceDefinition>,
-                   timeProvider : ITimeProvider) =
+    let transpile (models: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
-        let filespaceDefinitions =
-            CommonFeatures.getFilespaceDefinitions (models)
-        filespaceDefinitions
-        |> Seq.map (fun x -> transpileFilespaceDefinition (x, comments))
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (models)
+        filespaceDefinitions |> Seq.map (fun x -> transpileFilespaceDefinition (x, comments))

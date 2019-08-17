@@ -10,7 +10,7 @@ module CSharpTranspiler =
     let fileExtension = ".cs"
     let indentSpaces = 4
 
-    let getLeadingFileComments (timeProvider : ITimeProvider) =
+    let getLeadingFileComments (timeProvider: ITimeProvider) =
         let firstLines =
             [ { LineIndentCount = 0
                 LineContent = "/*" } ]
@@ -22,22 +22,17 @@ module CSharpTranspiler =
         let middleLines =
             CommonFeatures.getFileComment (timeProvider)
             |> List.map (fun x ->
-                   { LineIndentCount = 1
-                     LineContent = x })
+                { LineIndentCount = 1
+                  LineContent = x })
 
         let lines = firstLines @ middleLines @ lastLines
         convertIndentedLinesToString (lines, indentSpaces)
 
-    let transpile (models : seq<NamespaceDefinition>,
-                   timeProvider : ITimeProvider) =
+    let transpile (models: seq<NamespaceDefinition>, fieldKind: FieldKind, timeProvider: ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
-        let syntaxGenerator =
-            SyntaxGenerator.GetGenerator
-                (new AdhocWorkspace(), LanguageNames.CSharp)
-        let filespaceDefinitions =
-            CommonFeatures.getFilespaceDefinitions (models)
+        let syntaxGenerator = SyntaxGenerator.GetGenerator(new AdhocWorkspace(), LanguageNames.CSharp)
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (models)
         filespaceDefinitions
         |> Seq.collect
-               (fun x ->
-               RoslynTranspiler.transpileFilespaceDefinition
-                   (syntaxGenerator, fileExtension, x, comments))
+            (fun x ->
+            RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))

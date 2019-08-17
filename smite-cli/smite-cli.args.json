@@ -7,6 +7,14 @@
       "Command": "--input-file ..\\..\\..\\..\\examples\\MicrosoftGraphModels.yml"
     },
     {
+      "Id": "94a6c726-5908-41be-8dba-d214870af37e",
+      "Command": "--field field"
+    },
+    {
+      "Id": "43ed51bb-68c6-41b3-8dda-d2d764c56934",
+      "Command": "--field property"
+    },
+    {
       "Id": "429c4539-be25-496f-bd9c-434456de23eb",
       "Command": "C#",
       "Items": [

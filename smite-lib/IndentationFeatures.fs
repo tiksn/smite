@@ -4,21 +4,18 @@ module IndentationFeatures =
     open System.Text
 
     type IndentedLine =
-        { LineIndentCount : int
-          LineContent : string }
+        { LineIndentCount: int
+          LineContent: string }
 
     let emptyLine =
         { LineIndentCount = 0
           LineContent = "" }
 
-    let appendLineToBuilder (builder : StringBuilder, indentCount : int,
-                             lineContent : string, spaces : string) =
-        seq { 1..indentCount }
-        |> Seq.iter (fun x -> builder.Append(spaces) |> ignore)
+    let appendLineToBuilder (builder: StringBuilder, indentCount: int, lineContent: string, spaces: string) =
+        seq { 1..indentCount } |> Seq.iter (fun x -> builder.Append(spaces) |> ignore)
         builder.AppendLine lineContent |> ignore
 
-    let convertIndentedLinesToString (lines : seq<IndentedLine>,
-                                      indentSpaces : int) =
+    let convertIndentedLinesToString (lines: seq<IndentedLine>, indentSpaces: int) =
         let builder = StringBuilder()
 
         let spaces =
@@ -27,9 +24,5 @@ module IndentationFeatures =
                     yield " "
             }
             |> Seq.reduce (fun x y -> x + y)
-        lines
-        |> Seq.iter
-               (fun x ->
-               appendLineToBuilder
-                   (builder, x.LineIndentCount, x.LineContent, spaces))
+        lines |> Seq.iter (fun x -> appendLineToBuilder (builder, x.LineIndentCount, x.LineContent, spaces))
         builder.ToString()
