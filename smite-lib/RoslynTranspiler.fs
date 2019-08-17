@@ -27,10 +27,17 @@ module RoslynTranspiler =
             | true -> ats
             | false -> ts
 
+        let backfieldName = sprintf "_%s" fieldDefinition.Name
+
         let fd =
             match fieldKind with
-            | FieldKind.Field -> syntaxGenerator.FieldDeclaration(fieldDefinition.Name, t, Accessibility.Public)
-            | FieldKind.Property -> syntaxGenerator.PropertyDeclaration(fieldDefinition.Name, t, Accessibility.Public)
+            | FieldKind.Field -> [syntaxGenerator.FieldDeclaration(fieldDefinition.Name, t, Accessibility.Public)]
+            | FieldKind.Property -> [   syntaxGenerator.FieldDeclaration(backfieldName, t, Accessibility.Private)
+                                        syntaxGenerator.PropertyDeclaration
+                                            (fieldDefinition.Name, t, Accessibility.Public, DeclarationModifiers.Virtual,
+                                             [ syntaxGenerator.ReturnStatement(syntaxGenerator.IdentifierName(backfieldName)) ],
+                                             [ syntaxGenerator.AssignmentStatement
+                                                 (syntaxGenerator.IdentifierName(backfieldName), syntaxGenerator.IdentifierName("value")) ]) ]
 
         (ns, fd)
 
@@ -41,7 +48,10 @@ module RoslynTranspiler =
 
     let generateClassDeclaration (syntaxGenerator: SyntaxGenerator, model: ModelDefinition, fieldKind: FieldKind) =
         let fields = generateFieldsCode (syntaxGenerator, model.Fields, fieldKind)
-        let members = fields |> Seq.map (fun (_, f) -> f)
+        let members =
+            fields
+            |> Seq.map (fun (_, f) -> f)
+            |> Seq.collect(fun x-> x)
 
         let namespaces =
             fields
