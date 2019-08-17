@@ -36,9 +36,13 @@ module RoslynTranspiler =
                 [ syntaxGenerator.FieldDeclaration(backfieldName, t, Accessibility.Private)
                   syntaxGenerator.PropertyDeclaration
                       (fieldDefinition.Name, t, Accessibility.Public, DeclarationModifiers.None,
-                       [ syntaxGenerator.ReturnStatement(syntaxGenerator.MemberAccessExpression(syntaxGenerator.ThisExpression(),syntaxGenerator.IdentifierName(backfieldName))) ],
+                       [ syntaxGenerator.ReturnStatement
+                           (syntaxGenerator.MemberAccessExpression
+                               (syntaxGenerator.ThisExpression(), syntaxGenerator.IdentifierName(backfieldName))) ],
                        [ syntaxGenerator.AssignmentStatement
-                           (syntaxGenerator.MemberAccessExpression(syntaxGenerator.ThisExpression(), syntaxGenerator.IdentifierName(backfieldName)), syntaxGenerator.IdentifierName("value")) ]) ]
+                           (syntaxGenerator.MemberAccessExpression
+                               (syntaxGenerator.ThisExpression(), syntaxGenerator.IdentifierName(backfieldName)),
+                            syntaxGenerator.IdentifierName("value")) ]) ]
 
         (ns, fd)
 
