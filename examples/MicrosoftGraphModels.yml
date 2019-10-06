@@ -2,13 +2,19 @@
 namespace:
   - Microsoft
   - Graph
-  - Users
+  - Roles
 enumerations:
   - name: Role
     values:
     - User
     - Moderator
     - Administrator
+...
+---
+namespace:
+  - Microsoft
+  - Graph
+  - Users
 models:
   - name: GraphUser
     fields:
@@ -22,6 +28,10 @@ models:
         type: integer
         array: true
       - name: Roles
+        namespace:
+        - Microsoft
+        - Graph
+        - Roles
         type: Role
         array: true
 ...
