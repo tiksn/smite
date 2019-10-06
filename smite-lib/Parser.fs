@@ -27,11 +27,11 @@ module Parser =
         match children.ContainsKey(new YamlScalarNode(name)) with
         | true -> Some children.[new YamlScalarNode(name)]
         | false -> None
-    
+
     let getOptionalSequenceNode (children: IDictionary<YamlNode, YamlNode>) name =
         let child = getOptionalChild children name
         match child with
-        | Some x -> Some (getSequenceNode x)
+        | Some x -> Some(getSequenceNode x)
         | None -> None
 
     let getNamespaceStrings (nsNode: YamlSequenceNode) =
@@ -101,9 +101,9 @@ module Parser =
         { Name = nameValue
           Values = fields }
 
-    let parseEntityAsArray parseEntitySequence node  =
+    let parseEntityAsArray parseEntitySequence node =
         match node with
-        | Some children -> 
+        | Some children ->
             children
             |> Seq.map getMappingNode
             |> Seq.map (fun x -> parseEntitySequence (x))
@@ -118,7 +118,7 @@ module Parser =
 
         let modelsArray =
             match modelsNode with
-            | Some children -> 
+            | Some children ->
                 children
                 |> Seq.map getMappingNode
                 |> Seq.map (fun x -> parseModelSequence (x))
@@ -127,7 +127,7 @@ module Parser =
 
         { Namespace = nsArray
           Models = parseEntityAsArray parseModelSequence modelsNode
-          Enumerations = parseEntityAsArray parseEnumerationSequence enumerationsNode}
+          Enumerations = parseEntityAsArray parseEnumerationSequence enumerationsNode }
 
     let parseModelYaml fileName =
         let yaml = File.ReadAllText fileName

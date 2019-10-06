@@ -42,7 +42,7 @@ module CommonFeatures =
             |> Seq.min
 
         let numberOfCommonSegments =
-            seq { 0..minNamespaceLength }
+            seq { 0 .. minNamespaceLength }
             |> Seq.where (fun x -> hasSameStartSegments (nsSeq, x))
             |> Seq.max
 
