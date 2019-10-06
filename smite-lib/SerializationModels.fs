@@ -24,9 +24,14 @@ type ModelDefinition =
     { Name: string
       Fields: FieldDefinition [] }
 
+type EnumerationDefinition =
+    { Name: string
+      Values: string [] }
+
 type NamespaceDefinition =
     { Namespace: string []
-      Models: ModelDefinition [] }
+      Models: ModelDefinition []
+      Enumerations: EnumerationDefinition [] }
 
 type SingleNamespaceFilespaceDefinition =
     { Namespace: string []
