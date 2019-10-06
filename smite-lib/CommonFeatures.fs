@@ -50,7 +50,8 @@ module CommonFeatures =
         |> Seq.map (fun x ->
             { Namespace = x.Namespace
               Filespace = getEndSegments (x.Namespace, numberOfCommonSegments) |> Seq.toArray
-              Models = x.Models })
+              Models = x.Models
+              Enumerations = x.Enumerations })
 
     let getFilespaceDefinitionsForRootOnlyNamespaces (namespaceDefinitions: seq<NamespaceDefinition>) =
         namespaceDefinitions

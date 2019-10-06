@@ -36,7 +36,8 @@ type NamespaceDefinition =
 type SingleNamespaceFilespaceDefinition =
     { Namespace: string []
       Filespace: string []
-      Models: ModelDefinition [] }
+      Models: ModelDefinition []
+      Enumerations: EnumerationDefinition [] }
 
 type MultiNamespaceFilespaceDefinition =
     { Filespace: string []
