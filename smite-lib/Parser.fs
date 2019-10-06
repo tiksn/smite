@@ -89,6 +89,27 @@ module Parser =
         { Name = nameValue
           Fields = fields }
 
+    let parseEnumerationSequence (modelNode: YamlMappingNode) =
+        let nameValue = getScalarNode(modelNode.Children.[new YamlScalarNode("name")]).Value
+        let valuesNodeChildren = getSequenceNode(modelNode.Children.[new YamlScalarNode("values")]).Children
+
+        let fields =
+            valuesNodeChildren
+            |> Seq.map getScalarNode
+            |> Seq.map (fun x -> x.Value)
+            |> Seq.toArray
+        { Name = nameValue
+          Values = fields }
+
+    let parseEntityAsArray parseEntitySequence node  =
+        match node with
+        | Some children -> 
+            children
+            |> Seq.map getMappingNode
+            |> Seq.map (fun x -> parseEntitySequence (x))
+            |> Seq.toArray
+        | None -> [||]
+
     let parseYamlRootElement (rootNode: YamlMappingNode) =
         let nsNode = getSequenceNode (rootNode.Children.[new YamlScalarNode("namespace")])
         let modelsNode = getOptionalSequenceNode rootNode.Children "models"
@@ -105,7 +126,8 @@ module Parser =
             | None -> [||]
 
         { Namespace = nsArray
-          Models = modelsArray }
+          Models = parseEntityAsArray parseModelSequence modelsNode
+          Enumerations = parseEntityAsArray parseEnumerationSequence enumerationsNode}
 
     let parseModelYaml fileName =
         let yaml = File.ReadAllText fileName
