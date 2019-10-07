@@ -79,6 +79,24 @@ module TypeScriptTranspiler =
         let lines = [ emptyLine; firstLine ] @ members @ [ lastLine ]
         (namespaces, lines)
 
+    let generateEnumerationDeclaration (enumeration: EnumerationDefinition) =
+        let firstLine =
+            { LineIndentCount = 1
+              LineContent = "export enum " + enumeration.Name + " {" }
+
+        let lastLine =
+            { LineIndentCount = 1
+              LineContent = "}" }
+
+        let members =
+            enumeration.Values
+            |> Seq.map (fun v ->
+                { LineIndentCount = 2
+                  LineContent = v + ","})
+            |> Seq.toList
+
+        [ emptyLine; firstLine ] @ members @ [ lastLine ]
+
     let generateClassDeclarations (models: ModelDefinition []) =
         let namespaces =
             models
@@ -93,9 +111,16 @@ module TypeScriptTranspiler =
 
         (namespaces, lines)
 
+    let generateEnumerationDeclarations (enumerations: EnumerationDefinition []) =
+        enumerations
+        |> Seq.map generateEnumerationDeclaration
+        |> Seq.collect (fun x -> x)
+        |> Seq.toList
+
     let generateNamespaceDeclaration (ns: NamespaceDefinition) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns.Namespace)
         let namespaces, modelsLines = generateClassDeclarations ns.Models
+        let enumerationsLines = generateEnumerationDeclarations ns.Enumerations
 
         let directives =
             [ { LineIndentCount = 0
@@ -106,7 +131,7 @@ module TypeScriptTranspiler =
                 LineContent = "}" }
               emptyLine ]
 
-        directives @ modelsLines @ namespaceClosingLines
+        directives @ enumerationsLines @ modelsLines @ namespaceClosingLines
 
     let generateSourceFileCodePerNamespace (namespaceDefinition: NamespaceDefinition, getFilespaces) =
         namespaceDefinition.Models
