@@ -89,10 +89,10 @@ module FSharpTranspiler =
 
         (namespaces, lines)
 
-    let generateSourceFileCode (ns: string [], moduleName: string, models: ModelDefinition [],
+    let generateSourceFileCode (ns: string [], moduleName: string, models: ModelDefinition [], enumerations: EnumerationDefinition[],
                                 comments: IndentedLine list) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
-        let namespaces, lines = generateClassDeclarations models
+        let namespaces, modelsLines = generateClassDeclarations models
 
         let directives =
             [ { LineIndentCount = 0
@@ -110,7 +110,7 @@ module FSharpTranspiler =
                   LineContent = "open " + x })
             |> Seq.toList
 
-        let sourceFileLines = comments @ directives @ usings @ lines
+        let sourceFileLines = comments @ directives @ usings @ modelsLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition (filespaceDefinition: SingleNamespaceFilespaceDefinition,
@@ -118,11 +118,11 @@ module FSharpTranspiler =
         let filePath = CommonFeatures.getFilePathWithExtension (filespaceDefinition, fileExtension)
         let moduleName = filespaceDefinition.Filespace |> Seq.last
         let sourceFileCode =
-            generateSourceFileCode (filespaceDefinition.Namespace, moduleName, filespaceDefinition.Models, comments)
+            generateSourceFileCode (filespaceDefinition.Namespace, moduleName, filespaceDefinition.Models, filespaceDefinition.Enumerations, comments)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (models: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
+    let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
-        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (models)
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (namespaceDefinitions)
         filespaceDefinitions |> Seq.map (fun x -> transpileFilespaceDefinition (x, comments))
