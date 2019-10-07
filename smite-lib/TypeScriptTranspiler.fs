@@ -92,7 +92,7 @@ module TypeScriptTranspiler =
             enumeration.Values
             |> Seq.map (fun v ->
                 { LineIndentCount = 2
-                  LineContent = v + ","})
+                  LineContent = v + "," })
             |> Seq.toList
 
         [ emptyLine; firstLine ] @ members @ [ lastLine ]
