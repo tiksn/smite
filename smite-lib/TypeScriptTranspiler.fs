@@ -157,9 +157,9 @@ module TypeScriptTranspiler =
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (models: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
+    let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
-        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (models)
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (namespaceDefinitions)
 
         let getFilespaces (ns: string []) =
             filespaceDefinitions
