@@ -95,7 +95,7 @@ module TypeScriptTranspiler =
 
     let generateNamespaceDeclaration (ns: NamespaceDefinition) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns.Namespace)
-        let namespaces, lines = generateClassDeclarations ns.Models
+        let namespaces, modelsLines = generateClassDeclarations ns.Models
 
         let directives =
             [ { LineIndentCount = 0
@@ -106,7 +106,7 @@ module TypeScriptTranspiler =
                 LineContent = "}" }
               emptyLine ]
 
-        directives @ lines @ namespaceClosingLines
+        directives @ modelsLines @ namespaceClosingLines
 
     let generateSourceFileCodePerNamespace (namespaceDefinition: NamespaceDefinition, getFilespaces) =
         namespaceDefinition.Models
