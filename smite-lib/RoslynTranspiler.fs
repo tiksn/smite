@@ -101,9 +101,20 @@ module RoslynTranspiler =
     let transpileFilespaceDefinition (syntaxGenerator: SyntaxGenerator, fileExtension: string,
                                       filespaceDefinition: SingleNamespaceFilespaceDefinition, fieldKind: FieldKind,
                                       comments: string) =
-        filespaceDefinition.Models
-        |> Seq.map
-            (fun x ->
-            transpileModelDefinition
-                (syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x,
-                 fieldKind, comments))
+        let modelsFiles =
+            filespaceDefinition.Models
+            |> Seq.map
+                (fun x ->
+                transpileModelDefinition
+                    (syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x,
+                     fieldKind, comments))
+
+        let enumerationsFiles =
+            filespaceDefinition.Enumerations
+            |> Seq.map
+                (fun x ->
+                transpileModelDefinition
+                    (syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x,
+                     fieldKind, comments))
+
+        Seq.concat [ modelsFiles; enumerationsFiles ]
