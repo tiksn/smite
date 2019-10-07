@@ -2,6 +2,18 @@
 namespace:
   - Microsoft
   - Graph
+  - Roles
+enumerations:
+  - name: Role
+    values:
+    - User
+    - Moderator
+    - Administrator
+...
+---
+namespace:
+  - Microsoft
+  - Graph
   - Users
 models:
   - name: GraphUser
@@ -15,12 +27,25 @@ models:
       - name: ContactIds
         type: integer
         array: true
+      - name: Roles
+        namespace:
+        - Microsoft
+        - Graph
+        - Roles
+        type: Role
+        array: true
 ...
 ---
 namespace:
   - Microsoft
   - Graph
   - Documents
+enumerations:
+  - name: DocumentType
+    values:
+    - UserDocument
+    - GroupDocument
+    - CorporateDocument
 models:
   - name: Document
     fields:
@@ -35,6 +60,8 @@ models:
           - Google
           - Inventory
         type: SerialNumber
+      - name: DocumentType
+        type: DocumentType
   - name: DocumentRetrievalStatistics
     fields:
       - name: ID

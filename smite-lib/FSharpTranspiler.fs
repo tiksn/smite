@@ -75,6 +75,20 @@ module FSharpTranspiler =
         let lines = [ emptyLine; firstLine ] @ members @ [ lastLine; emptyLine ]
         (namespaces, lines)
 
+    let generateEnumerationDeclaration (enumeration: EnumerationDefinition) =
+        let firstLine =
+            { LineIndentCount = 1
+              LineContent = "type " + enumeration.Name + " =" }
+
+        let members =
+            enumeration.Values
+            |> Seq.mapi (fun i v ->
+                { LineIndentCount = 1
+                  LineContent = "| " + v + " = " + i.ToString() })
+            |> Seq.toList
+
+        [ emptyLine; firstLine ] @ members @ [ emptyLine ]
+
     let generateClassDeclarations (models: ModelDefinition []) =
         let namespaces =
             models
@@ -89,10 +103,17 @@ module FSharpTranspiler =
 
         (namespaces, lines)
 
+    let generateEnumerationDeclarations (enumerations: EnumerationDefinition []) =
+        enumerations
+        |> Seq.map generateEnumerationDeclaration
+        |> Seq.collect (fun x -> x)
+        |> Seq.toList
+
     let generateSourceFileCode (ns: string [], moduleName: string, models: ModelDefinition [],
-                                comments: IndentedLine list) =
+                                enumerations: EnumerationDefinition [], comments: IndentedLine list) =
         let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
-        let namespaces, lines = generateClassDeclarations models
+        let namespaces, modelsLines = generateClassDeclarations models
+        let enumerationsLines = generateEnumerationDeclarations enumerations
 
         let directives =
             [ { LineIndentCount = 0
@@ -110,7 +131,7 @@ module FSharpTranspiler =
                   LineContent = "open " + x })
             |> Seq.toList
 
-        let sourceFileLines = comments @ directives @ usings @ lines
+        let sourceFileLines = comments @ directives @ usings @ enumerationsLines @ modelsLines
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition (filespaceDefinition: SingleNamespaceFilespaceDefinition,
@@ -118,11 +139,13 @@ module FSharpTranspiler =
         let filePath = CommonFeatures.getFilePathWithExtension (filespaceDefinition, fileExtension)
         let moduleName = filespaceDefinition.Filespace |> Seq.last
         let sourceFileCode =
-            generateSourceFileCode (filespaceDefinition.Namespace, moduleName, filespaceDefinition.Models, comments)
+            generateSourceFileCode
+                (filespaceDefinition.Namespace, moduleName, filespaceDefinition.Models, filespaceDefinition.Enumerations,
+                 comments)
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (models: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
+    let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
-        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (models)
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (namespaceDefinitions)
         filespaceDefinitions |> Seq.map (fun x -> transpileFilespaceDefinition (x, comments))

@@ -42,7 +42,7 @@ module CommonFeatures =
             |> Seq.min
 
         let numberOfCommonSegments =
-            seq { 0..minNamespaceLength }
+            seq { 0 .. minNamespaceLength }
             |> Seq.where (fun x -> hasSameStartSegments (nsSeq, x))
             |> Seq.max
 
@@ -50,7 +50,8 @@ module CommonFeatures =
         |> Seq.map (fun x ->
             { Namespace = x.Namespace
               Filespace = getEndSegments (x.Namespace, numberOfCommonSegments) |> Seq.toArray
-              Models = x.Models })
+              Models = x.Models
+              Enumerations = x.Enumerations })
 
     let getFilespaceDefinitionsForRootOnlyNamespaces (namespaceDefinitions: seq<NamespaceDefinition>) =
         namespaceDefinitions
