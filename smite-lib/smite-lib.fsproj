@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.4.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.3.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="3.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.3.1" />
     <PackageReference Include="TIKSN-Framework" Version="3.1.0" />
