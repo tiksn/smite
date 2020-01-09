@@ -35,4 +35,4 @@ module CSharpTranspiler =
         filespaceDefinitions
         |> Seq.collect
             (fun x ->
-            RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))
+                RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))
