@@ -66,7 +66,7 @@ module RoslynTranspiler =
 
         let syntaxNode =
             syntaxGenerator.ClassDeclaration
-                (model.Name, null, Accessibility.Public, DeclarationModifiers.None, null, null, members)
+                (model.Name, null, Accessibility.Public, DeclarationModifiers.Partial, null, null, members)
         (namespaces, syntaxNode)
 
     let generateEnumerationDeclaration (enumeration: EnumerationDefinition) (syntaxGenerator: SyntaxGenerator) =
