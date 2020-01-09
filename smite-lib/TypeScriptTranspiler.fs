@@ -140,7 +140,8 @@ module TypeScriptTranspiler =
             match x.Type with
             | ComplexTypeDifferentNamespace(nsArray, typeName) ->
                 Some nsArray
-                if nsArray.[0] <> namespaceDefinition.Namespace.[0] then Some nsArray
+                if nsArray.[0] <> namespaceDefinition.Namespace.[0]
+                then Some nsArray
                 else None
             | _ -> None)
         |> Seq.distinct
