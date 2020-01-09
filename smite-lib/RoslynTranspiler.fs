@@ -123,16 +123,16 @@ module RoslynTranspiler =
             filespaceDefinition.Models
             |> Seq.map
                 (fun x ->
-                transpileModelDefinition
-                    (syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x,
-                     fieldKind, comments))
+                    transpileModelDefinition
+                        (syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x,
+                         fieldKind, comments))
 
         let enumerationsFiles =
             filespaceDefinition.Enumerations
             |> Seq.map
                 (fun x ->
-                transpileEnumerationDefinition
-                    (syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x,
-                     comments))
+                    transpileEnumerationDefinition
+                        (syntaxGenerator, fileExtension, filespaceDefinition.Namespace, filespaceDefinition.Filespace, x,
+                         comments))
 
         Seq.concat [ modelsFiles; enumerationsFiles ]
