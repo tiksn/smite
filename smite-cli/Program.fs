@@ -28,17 +28,33 @@ type CLIArguments =
 [<EntryPoint>]
 let main argv =
     let configurationRootSetup = new ConfigurationRootSetup()
-    let configurationRoot = configurationRootSetup.GetConfigurationRoot()
-    let compositionRootSetup = new CompositionRootSetup(configurationRoot)
-    let serviceProvider = compositionRootSetup.CreateServiceProvider()
-    let timeProvider = serviceProvider.GetRequiredService<ITimeProvider>()
-    let parser = ArgumentParser.Create<CLIArguments>(programName = "smite")
+
+    let configurationRoot =
+        configurationRootSetup.GetConfigurationRoot()
+
+    let compositionRootSetup =
+        new CompositionRootSetup(configurationRoot)
+
+    let serviceProvider =
+        compositionRootSetup.CreateServiceProvider()
+
+    let timeProvider =
+        serviceProvider.GetRequiredService<ITimeProvider>()
+
+    let parser =
+        ArgumentParser.Create<CLIArguments>(programName = "smite")
+
     try
-        let results = parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
+        let results =
+            parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
+
         let inputFilePath = results.GetResult(Input_File)
         let outputFolderPath = results.GetResult(Output_Folder)
         let lang = results.GetResult(Lang)
-        let field = results.GetResult(Field, FieldKind.Field)
+
+        let field =
+            results.GetResult(Field, FieldKind.Field)
+
         let langName = lang.ToString()
         let inputFileAbsolutePath = Path.GetFullPath(inputFilePath)
         let outputFolderAbsolutePath = Path.GetFullPath(outputFolderPath)
@@ -51,6 +67,7 @@ let main argv =
             | SupportedProgrammingLanguage.FSharp -> FSharpTranspiler.transpile (models, timeProvider)
             | SupportedProgrammingLanguage.VisualBasic -> VisualBasicTranspiler.transpile (models, field, timeProvider)
             | SupportedProgrammingLanguage.TypeScript -> TypeScriptTranspiler.transpile (models, timeProvider)
+
         saveSourceFiles (outputFolderAbsolutePath, files)
         printfn "Writing models %s source files into %s" langName outputFolderAbsolutePath
         0
