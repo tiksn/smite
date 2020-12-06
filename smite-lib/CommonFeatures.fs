@@ -5,7 +5,9 @@ module CommonFeatures =
     open TIKSN.Time
 
     let getFileComment (timeProvider: ITimeProvider) =
-        let time = timeProvider.GetCurrentTime().ToString("D")
+        let time =
+            timeProvider.GetCurrentTime().ToString("D")
+
         [ "This file is auto-generated"
           "Please do not make manual changes"
 
@@ -15,14 +17,18 @@ module CommonFeatures =
         match fieldType with
         | PrimitiveType primitiveType -> (None, getSpecialType (primitiveType))
         | ComplexTypeSameNamespace typeName -> (None, typeName)
-        | ComplexTypeDifferentNamespace(nsArray, typeName) -> (Some nsArray, typeName)
+        | ComplexTypeDifferentNamespace (nsArray, typeName) -> (Some nsArray, typeName)
 
     let getStartSegments (ns: string [], startingSegmentsCount) =
-        let left, _ = ns |> Array.splitAt (startingSegmentsCount)
+        let left, _ =
+            ns |> Array.splitAt (startingSegmentsCount)
+
         left
 
     let getEndSegments (ns: string [], startingSegmentsCount) =
-        let _, right = ns |> Array.splitAt (startingSegmentsCount)
+        let _, right =
+            ns |> Array.splitAt (startingSegmentsCount)
+
         right
 
     let hasSameStartSegments (nsSeq: seq<string []>, startingSegmentsCount) =
@@ -31,10 +37,13 @@ module CommonFeatures =
              |> Seq.map (fun x -> getStartSegments (x, startingSegmentsCount))
              |> Seq.distinct
              |> Seq.toArray)
+
         nsSeqDistinct.Length = 1
 
     let getFilespaceDefinitions (namespaceDefinitions: seq<NamespaceDefinition>) =
-        let nsSeq = namespaceDefinitions |> Seq.map (fun x -> x.Namespace)
+        let nsSeq =
+            namespaceDefinitions
+            |> Seq.map (fun x -> x.Namespace)
 
         let minNamespaceLength =
             namespaceDefinitions
@@ -49,7 +58,9 @@ module CommonFeatures =
         namespaceDefinitions
         |> Seq.map (fun x ->
             { Namespace = x.Namespace
-              Filespace = getEndSegments (x.Namespace, numberOfCommonSegments) |> Seq.toArray
+              Filespace =
+                  getEndSegments (x.Namespace, numberOfCommonSegments)
+                  |> Seq.toArray
               Models = x.Models
               Enumerations = x.Enumerations })
 
@@ -65,15 +76,19 @@ module CommonFeatures =
     let rec getFilespacesWithExtension (filespaces: string list, fileExtension: string) =
         match filespaces with
         | hd :: [] -> [ hd + fileExtension ]
-        | hd :: tl -> hd :: getFilespacesWithExtension (tl, fileExtension)
+        | hd :: tl ->
+            hd
+            :: getFilespacesWithExtension (tl, fileExtension)
         | _ -> failwith "Empty list."
 
     let getFilePathWithExtension (filespaceDefinition: SingleNamespaceFilespaceDefinition, fileExtension) =
         let filespacesWithExtension =
             getFilespacesWithExtension ((filespaceDefinition.Filespace |> Array.toList), fileExtension)
+
         filespacesWithExtension |> List.toArray
 
     let getFilePathWithExtensionForMultiNamespace (filespaceDefinition: MultiNamespaceFilespaceDefinition, fileExtension) =
         let filespacesWithExtension =
             getFilespacesWithExtension ((filespaceDefinition.Filespace |> Array.toList), fileExtension)
+
         filespacesWithExtension |> List.toArray

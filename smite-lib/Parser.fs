@@ -41,13 +41,22 @@ module Parser =
         |> Seq.toArray
 
     let parseModelFieldNode (fieldNode: YamlMappingNode) =
-        let nameValue = getScalarNode(fieldNode.Children.[new YamlScalarNode("name")]).Value
-        let typeValue = getScalarNode(fieldNode.Children.[new YamlScalarNode("type")]).Value
+        let nameValue =
+            getScalarNode(fieldNode.Children.[new YamlScalarNode("name")])
+                .Value
+
+        let typeValue =
+            getScalarNode(fieldNode.Children.[new YamlScalarNode("type")])
+                .Value
+
         let typeNamespaceKey = new YamlScalarNode("namespace")
 
         let typeNamespace =
             match fieldNode.Children.ContainsKey(typeNamespaceKey) with
-            | true -> Some(getSequenceNode (fieldNode.Children.[typeNamespaceKey]) |> getNamespaceStrings)
+            | true ->
+                Some
+                    (getSequenceNode (fieldNode.Children.[typeNamespaceKey])
+                     |> getNamespaceStrings)
             | false -> None
 
         let typeEnum =
@@ -65,7 +74,10 @@ module Parser =
 
         let isArrayValue =
             match fieldNode.Children.ContainsKey(isArrayKey) with
-            | true -> Some(getScalarNode(fieldNode.Children.[isArrayKey]).Value)
+            | true ->
+                Some
+                    (getScalarNode(fieldNode.Children.[isArrayKey])
+                        .Value)
             | false -> None
 
         let isArray =
@@ -78,28 +90,38 @@ module Parser =
           IsArray = isArray }
 
     let parseModelSequence (modelNode: YamlMappingNode) =
-        let nameValue = getScalarNode(modelNode.Children.[new YamlScalarNode("name")]).Value
-        let fieldsNodeChildren = getSequenceNode(modelNode.Children.[new YamlScalarNode("fields")]).Children
+        let nameValue =
+            getScalarNode(modelNode.Children.[new YamlScalarNode("name")])
+                .Value
+
+        let fieldsNodeChildren =
+            getSequenceNode(modelNode.Children.[new YamlScalarNode("fields")])
+                .Children
 
         let fields =
             fieldsNodeChildren
             |> Seq.map getMappingNode
             |> Seq.map (fun x -> parseModelFieldNode (x))
             |> Seq.toArray
-        { Name = nameValue
-          Fields = fields }
+
+        { Name = nameValue; Fields = fields }
 
     let parseEnumerationSequence (modelNode: YamlMappingNode) =
-        let nameValue = getScalarNode(modelNode.Children.[new YamlScalarNode("name")]).Value
-        let valuesNodeChildren = getSequenceNode(modelNode.Children.[new YamlScalarNode("values")]).Children
+        let nameValue =
+            getScalarNode(modelNode.Children.[new YamlScalarNode("name")])
+                .Value
+
+        let valuesNodeChildren =
+            getSequenceNode(modelNode.Children.[new YamlScalarNode("values")])
+                .Children
 
         let fields =
             valuesNodeChildren
             |> Seq.map getScalarNode
             |> Seq.map (fun x -> x.Value)
             |> Seq.toArray
-        { Name = nameValue
-          Values = fields }
+
+        { Name = nameValue; Values = fields }
 
     let parseEntityAsArray parseEntitySequence node =
         match node with
@@ -111,9 +133,15 @@ module Parser =
         | None -> [||]
 
     let parseYamlRootElement (rootNode: YamlMappingNode) =
-        let nsNode = getSequenceNode (rootNode.Children.[new YamlScalarNode("namespace")])
-        let modelsNode = getOptionalSequenceNode rootNode.Children "models"
-        let enumerationsNode = getOptionalSequenceNode rootNode.Children "enumerations"
+        let nsNode =
+            getSequenceNode (rootNode.Children.[new YamlScalarNode("namespace")])
+
+        let modelsNode =
+            getOptionalSequenceNode rootNode.Children "models"
+
+        let enumerationsNode =
+            getOptionalSequenceNode rootNode.Children "enumerations"
+
         let nsArray = getNamespaceStrings nsNode
 
         let modelsArray =
@@ -134,6 +162,7 @@ module Parser =
         use reader = new StringReader(yaml)
         let stream = YamlStream()
         stream.Load(reader)
+
         stream.Documents
         |> Seq.map (fun x -> getMappingNode (x.RootNode))
         |> Seq.map parseYamlRootElement
