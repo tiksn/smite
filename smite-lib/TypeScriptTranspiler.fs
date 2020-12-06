@@ -18,11 +18,10 @@ module TypeScriptTranspiler =
 
         let middleLines =
             CommonFeatures.getFileComment (timeProvider)
-            |> List.map (fun x ->
-                { LineIndentCount = 1
-                  LineContent = x })
+            |> List.map (fun x -> { LineIndentCount = 1; LineContent = x })
 
-        firstLines @ middleLines @ lastLines @ [ emptyLine ]
+        firstLines
+        @ middleLines @ lastLines @ [ emptyLine ]
 
     let getSpecialType (t: PrimitiveType) =
         match t with
@@ -32,11 +31,15 @@ module TypeScriptTranspiler =
         | PrimitiveType.StringType -> "string"
 
     let generateFieldCode (fieldDefinition: FieldDefinition) =
-        let ns, tn = CommonFeatures.getFieldTypeSyntaxNode (fieldDefinition.Type, getSpecialType)
+        let ns, tn =
+            CommonFeatures.getFieldTypeSyntaxNode (fieldDefinition.Type, getSpecialType)
 
         let fullTypeName =
             match ns with
-            | Some x -> CommonFeatures.composeDotSeparatedNamespace (x) + "." + tn
+            | Some x ->
+                CommonFeatures.composeDotSeparatedNamespace (x)
+                + "."
+                + tn
             | None -> tn
 
         let t =
@@ -67,16 +70,16 @@ module TypeScriptTranspiler =
         let fields = generateFieldsCode (model.Fields)
 
         let members =
-            fields
-            |> Seq.map (fun (_, f) -> f)
-            |> Seq.toList
+            fields |> Seq.map (fun (_, f) -> f) |> Seq.toList
 
         let namespaces =
             fields
             |> Seq.filter (fun (o, _) -> o.IsSome)
             |> Seq.map (fun (o, _) -> o.Value)
 
-        let lines = [ emptyLine; firstLine ] @ members @ [ lastLine ]
+        let lines =
+            [ emptyLine; firstLine ] @ members @ [ lastLine ]
+
         (namespaces, lines)
 
     let generateEnumerationDeclaration (enumeration: EnumerationDefinition) =
@@ -118,9 +121,13 @@ module TypeScriptTranspiler =
         |> Seq.toList
 
     let generateNamespaceDeclaration (ns: NamespaceDefinition) =
-        let nsString = CommonFeatures.composeDotSeparatedNamespace (ns.Namespace)
+        let nsString =
+            CommonFeatures.composeDotSeparatedNamespace (ns.Namespace)
+
         let namespaces, modelsLines = generateClassDeclarations ns.Models
-        let enumerationsLines = generateEnumerationDeclarations ns.Enumerations
+
+        let enumerationsLines =
+            generateEnumerationDeclarations ns.Enumerations
 
         let directives =
             [ { LineIndentCount = 0
@@ -131,15 +138,18 @@ module TypeScriptTranspiler =
                 LineContent = "}" }
               emptyLine ]
 
-        directives @ enumerationsLines @ modelsLines @ namespaceClosingLines
+        directives
+        @ enumerationsLines
+          @ modelsLines @ namespaceClosingLines
 
     let generateSourceFileCodePerNamespace (namespaceDefinition: NamespaceDefinition, getFilespaces) =
         namespaceDefinition.Models
         |> Seq.collect (fun x -> x.Fields)
         |> Seq.choose (fun x ->
             match x.Type with
-            | ComplexTypeDifferentNamespace(nsArray, typeName) ->
+            | ComplexTypeDifferentNamespace (nsArray, typeName) ->
                 Some nsArray
+
                 if nsArray.[0] <> namespaceDefinition.Namespace.[0]
                 then Some nsArray
                 else None
@@ -154,7 +164,8 @@ module TypeScriptTranspiler =
             { LineIndentCount = 0
               LineContent = "import { " + x + " } from \"./" + x + "\"" })
 
-    let generateSourceFileCode (filespaceDefinition: MultiNamespaceFilespaceDefinition, getFilespaces,
+    let generateSourceFileCode (filespaceDefinition: MultiNamespaceFilespaceDefinition,
+                                getFilespaces,
                                 comments: IndentedLine list) =
         let usings =
             filespaceDefinition.Namespaces
@@ -173,19 +184,28 @@ module TypeScriptTranspiler =
             |> Seq.collect (fun x -> x)
             |> Seq.toList
 
-        let sourceFileLines = comments @ usingsWithEmptyLine @ namespacesLines
+        let sourceFileLines =
+            comments @ usingsWithEmptyLine @ namespacesLines
+
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition: MultiNamespaceFilespaceDefinition, getFilespaces,
+    let transpileFilespaceDefinition (filespaceDefinition: MultiNamespaceFilespaceDefinition,
+                                      getFilespaces,
                                       comments: IndentedLine list) =
-        let filePath = CommonFeatures.getFilePathWithExtensionForMultiNamespace (filespaceDefinition, fileExtension)
-        let sourceFileCode = generateSourceFileCode (filespaceDefinition, getFilespaces, comments)
+        let filePath =
+            CommonFeatures.getFilePathWithExtensionForMultiNamespace (filespaceDefinition, fileExtension)
+
+        let sourceFileCode =
+            generateSourceFileCode (filespaceDefinition, getFilespaces, comments)
+
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
     let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
-        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (namespaceDefinitions)
+
+        let filespaceDefinitions =
+            CommonFeatures.getFilespaceDefinitionsForRootOnlyNamespaces (namespaceDefinitions)
 
         let getFilespaces (ns: string []) =
             filespaceDefinitions
@@ -193,4 +213,6 @@ module TypeScriptTranspiler =
                 x.Namespaces
                 |> Seq.map (fun x -> x.Namespace)
                 |> Seq.contains ns)
-        filespaceDefinitions |> Seq.map (fun x -> transpileFilespaceDefinition (x, getFilespaces, comments))
+
+        filespaceDefinitions
+        |> Seq.map (fun x -> transpileFilespaceDefinition (x, getFilespaces, comments))
