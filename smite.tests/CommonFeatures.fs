@@ -2,7 +2,6 @@ module CommonFeaturesTests
 
 open Expecto
 open TIKSN.smite.lib
-open TIKSN.smite.lib
 
 [<Tests>]
 let tests =
