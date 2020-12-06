@@ -12,11 +12,14 @@ let tests =
             let nsd =
                 seq
                     [ { Namespace = [| "Microsoft"; "Graph" |]
-                        Models = modelsArray }
+                        Models = modelsArray
+                        Enumerations = [||]}
                       { Namespace = [| "System"; "Collections"; "Generic" |]
-                        Models = modelsArray }
+                        Models = modelsArray
+                        Enumerations = [||]}
                       { Namespace = [| "TIKSN"; "smite"; "lib"; "core" |]
-                        Models = modelsArray } ]
+                        Models = modelsArray
+                        Enumerations = [||]} ]
 
             let subject = CommonFeatures.getFilespaceDefinitions (nsd)
             Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
@@ -41,13 +44,17 @@ let tests =
               let nsd =
                   seq
                       [ { Namespace = [| "System" |]
-                          Models = modelsArray }
+                          Models = modelsArray
+                          Enumerations = [||]}
                         { Namespace = [| "System"; "Collections" |]
-                          Models = modelsArray }
+                          Models = modelsArray
+                          Enumerations = [||]}
                         { Namespace = [| "System"; "Collections"; "Generic" |]
-                          Models = modelsArray }
+                          Models = modelsArray
+                          Enumerations = [||]}
                         { Namespace = [| "System"; "Collections"; "Specialized " |]
-                          Models = modelsArray } ]
+                          Models = modelsArray
+                          Enumerations = [||]} ]
 
               let subject = CommonFeatures.getFilespaceDefinitions (nsd)
               Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
@@ -72,11 +79,14 @@ let tests =
               let nsd =
                   seq
                       [ { Namespace = [| "System"; "Collections" |]
-                          Models = modelsArray }
+                          Models = modelsArray
+                          Enumerations = [||]}
                         { Namespace = [| "System"; "Collections"; "Generic" |]
-                          Models = modelsArray }
+                          Models = modelsArray
+                          Enumerations = [||]}
                         { Namespace = [| "System"; "Collections"; "Specialized " |]
-                          Models = modelsArray } ]
+                          Models = modelsArray
+                          Enumerations = [||]} ]
 
               let subject = CommonFeatures.getFilespaceDefinitions (nsd)
               Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
