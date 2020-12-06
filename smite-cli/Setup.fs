@@ -13,5 +13,4 @@ type CompositionRootSetup(configurationRoot) =
     inherit AutofacPlatformCompositionRootSetupBase(configurationRoot)
     override this.ConfigureContainerBuilder(builder: ContainerBuilder) = ()
     override this.ConfigureOptions(services: IServiceCollection, configuration: IConfigurationRoot) = ()
-    override this.GetLoggingSetups() =
-        Seq.empty
+    override this.GetLoggingSetups() = Seq.empty
