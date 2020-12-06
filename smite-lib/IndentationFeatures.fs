@@ -12,7 +12,9 @@ module IndentationFeatures =
           LineContent = "" }
 
     let appendLineToBuilder (builder: StringBuilder, indentCount: int, lineContent: string, spaces: string) =
-        seq { 1 .. indentCount } |> Seq.iter (fun x -> builder.Append(spaces) |> ignore)
+        seq { 1 .. indentCount }
+        |> Seq.iter (fun x -> builder.Append(spaces) |> ignore)
+
         builder.AppendLine lineContent |> ignore
 
     let convertIndentedLinesToString (lines: seq<IndentedLine>, indentSpaces: int) =
@@ -24,5 +26,8 @@ module IndentationFeatures =
                     yield " "
             }
             |> Seq.reduce (fun x y -> x + y)
-        lines |> Seq.iter (fun x -> appendLineToBuilder (builder, x.LineIndentCount, x.LineContent, spaces))
+
+        lines
+        |> Seq.iter (fun x -> appendLineToBuilder (builder, x.LineIndentCount, x.LineContent, spaces))
+
         builder.ToString()
