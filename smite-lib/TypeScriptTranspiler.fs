@@ -93,9 +93,10 @@ module TypeScriptTranspiler =
 
         let members =
             enumeration.Values
-            |> Seq.map (fun v ->
-                { LineIndentCount = 2
-                  LineContent = v + "," })
+            |> Seq.map
+                (fun v ->
+                    { LineIndentCount = 2
+                      LineContent = v + "," })
             |> Seq.toList
 
         [ emptyLine; firstLine ] @ members @ [ lastLine ]
@@ -145,28 +146,34 @@ module TypeScriptTranspiler =
     let generateSourceFileCodePerNamespace (namespaceDefinition: NamespaceDefinition, getFilespaces) =
         namespaceDefinition.Models
         |> Seq.collect (fun x -> x.Fields)
-        |> Seq.choose (fun x ->
-            match x.Type with
-            | ComplexTypeDifferentNamespace (nsArray, typeName) ->
-                Some nsArray
+        |> Seq.choose
+            (fun x ->
+                match x.Type with
+                | ComplexTypeDifferentNamespace (nsArray, typeName) ->
+                    Some nsArray
 
-                if nsArray.[0] <> namespaceDefinition.Namespace.[0]
-                then Some nsArray
-                else None
-            | _ -> None)
+                    if nsArray.[0] <> namespaceDefinition.Namespace.[0] then
+                        Some nsArray
+                    else
+                        None
+                | _ -> None)
         |> Seq.distinct
         |> Seq.map getFilespaces
         |> Seq.collect (fun x -> x)
         |> Seq.map (fun x -> x.Filespace)
         |> Seq.distinct
         |> Seq.map (fun x -> x.[0])
-        |> Seq.map (fun x ->
-            { LineIndentCount = 0
-              LineContent = "import { " + x + " } from \"./" + x + "\"" })
+        |> Seq.map
+            (fun x ->
+                { LineIndentCount = 0
+                  LineContent = "import { " + x + " } from \"./" + x + "\"" })
 
-    let generateSourceFileCode (filespaceDefinition: MultiNamespaceFilespaceDefinition,
-                                getFilespaces,
-                                comments: IndentedLine list) =
+    let generateSourceFileCode
+        (
+            filespaceDefinition: MultiNamespaceFilespaceDefinition,
+            getFilespaces,
+            comments: IndentedLine list
+        ) =
         let usings =
             filespaceDefinition.Namespaces
             |> Seq.map (fun x -> generateSourceFileCodePerNamespace (x, getFilespaces))
@@ -189,9 +196,12 @@ module TypeScriptTranspiler =
 
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition: MultiNamespaceFilespaceDefinition,
-                                      getFilespaces,
-                                      comments: IndentedLine list) =
+    let transpileFilespaceDefinition
+        (
+            filespaceDefinition: MultiNamespaceFilespaceDefinition,
+            getFilespaces,
+            comments: IndentedLine list
+        ) =
         let filePath =
             CommonFeatures.getFilePathWithExtensionForMultiNamespace (filespaceDefinition, fileExtension)
 
@@ -209,10 +219,11 @@ module TypeScriptTranspiler =
 
         let getFilespaces (ns: string []) =
             filespaceDefinitions
-            |> Seq.where (fun x ->
-                x.Namespaces
-                |> Seq.map (fun x -> x.Namespace)
-                |> Seq.contains ns)
+            |> Seq.where
+                (fun x ->
+                    x.Namespaces
+                    |> Seq.map (fun x -> x.Namespace)
+                    |> Seq.contains ns)
 
         filespaceDefinitions
         |> Seq.map (fun x -> transpileFilespaceDefinition (x, getFilespaces, comments))

@@ -84,9 +84,10 @@ module FSharpTranspiler =
 
         let members =
             enumeration.Values
-            |> Seq.mapi (fun i v ->
-                { LineIndentCount = 1
-                  LineContent = "| " + v + " = " + i.ToString() })
+            |> Seq.mapi
+                (fun i v ->
+                    { LineIndentCount = 1
+                      LineContent = "| " + v + " = " + i.ToString() })
             |> Seq.toList
 
         [ emptyLine; firstLine ] @ members @ [ emptyLine ]
@@ -111,11 +112,14 @@ module FSharpTranspiler =
         |> Seq.collect (fun x -> x)
         |> Seq.toList
 
-    let generateSourceFileCode (ns: string [],
-                                moduleName: string,
-                                models: ModelDefinition [],
-                                enumerations: EnumerationDefinition [],
-                                comments: IndentedLine list) =
+    let generateSourceFileCode
+        (
+            ns: string [],
+            moduleName: string,
+            models: ModelDefinition [],
+            enumerations: EnumerationDefinition [],
+            comments: IndentedLine list
+        ) =
         let nsString =
             CommonFeatures.composeDotSeparatedNamespace (ns)
 
@@ -135,9 +139,10 @@ module FSharpTranspiler =
             namespaces
             |> Seq.distinct
             |> Seq.map CommonFeatures.composeDotSeparatedNamespace
-            |> Seq.map (fun x ->
-                { LineIndentCount = 1
-                  LineContent = "open " + x })
+            |> Seq.map
+                (fun x ->
+                    { LineIndentCount = 1
+                      LineContent = "open " + x })
             |> Seq.toList
 
         let sourceFileLines =
@@ -147,8 +152,11 @@ module FSharpTranspiler =
 
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
-    let transpileFilespaceDefinition (filespaceDefinition: SingleNamespaceFilespaceDefinition,
-                                      comments: IndentedLine list) =
+    let transpileFilespaceDefinition
+        (
+            filespaceDefinition: SingleNamespaceFilespaceDefinition,
+            comments: IndentedLine list
+        ) =
         let filePath =
             CommonFeatures.getFilePathWithExtension (filespaceDefinition, fileExtension)
 
@@ -156,12 +164,13 @@ module FSharpTranspiler =
             filespaceDefinition.Filespace |> Seq.last
 
         let sourceFileCode =
-            generateSourceFileCode
-                (filespaceDefinition.Namespace,
-                 moduleName,
-                 filespaceDefinition.Models,
-                 filespaceDefinition.Enumerations,
-                 comments)
+            generateSourceFileCode (
+                filespaceDefinition.Namespace,
+                moduleName,
+                filespaceDefinition.Models,
+                filespaceDefinition.Enumerations,
+                comments
+            )
 
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }

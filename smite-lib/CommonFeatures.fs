@@ -56,20 +56,22 @@ module CommonFeatures =
             |> Seq.max
 
         namespaceDefinitions
-        |> Seq.map (fun x ->
-            { Namespace = x.Namespace
-              Filespace =
-                  getEndSegments (x.Namespace, numberOfCommonSegments)
-                  |> Seq.toArray
-              Models = x.Models
-              Enumerations = x.Enumerations })
+        |> Seq.map
+            (fun x ->
+                { Namespace = x.Namespace
+                  Filespace =
+                      getEndSegments (x.Namespace, numberOfCommonSegments)
+                      |> Seq.toArray
+                  Models = x.Models
+                  Enumerations = x.Enumerations })
 
     let getFilespaceDefinitionsForRootOnlyNamespaces (namespaceDefinitions: seq<NamespaceDefinition>) =
         namespaceDefinitions
         |> Seq.groupBy (fun x -> x.Namespace.[0])
-        |> Seq.map (fun (ns, nsds) ->
-            { Namespaces = nsds |> Seq.toArray
-              Filespace = [| ns |] })
+        |> Seq.map
+            (fun (ns, nsds) ->
+                { Namespaces = nsds |> Seq.toArray
+                  Filespace = [| ns |] })
 
     let composeDotSeparatedNamespace (ns: string []) = String.Join(".", ns)
 
@@ -87,7 +89,11 @@ module CommonFeatures =
 
         filespacesWithExtension |> List.toArray
 
-    let getFilePathWithExtensionForMultiNamespace (filespaceDefinition: MultiNamespaceFilespaceDefinition, fileExtension) =
+    let getFilePathWithExtensionForMultiNamespace
+        (
+            filespaceDefinition: MultiNamespaceFilespaceDefinition,
+            fileExtension
+        ) =
         let filespacesWithExtension =
             getFilespacesWithExtension ((filespaceDefinition.Filespace |> Array.toList), fileExtension)
 

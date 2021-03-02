@@ -41,8 +41,8 @@ let tests =
 
               for i = 0 to itemCount - 1 do
                   for j = 0 to nsArray.[i].Length - 1 do
-                      if i <> j
-                      then Expect.equal nsArray.[i].[j] fsArray.[i].[j] "Item values must be equal"
+                      if i <> j then
+                          Expect.equal nsArray.[i].[j] fsArray.[i].[j] "Item values must be equal"
 
           testCase "One common segment"
           <| fun _ ->
@@ -84,8 +84,8 @@ let tests =
 
               for i = 0 to itemCount - 1 do
                   for j = 0 to nsArray.[i].Length - 2 do
-                      if i <> j
-                      then Expect.equal nsArray.[i].[j + 1] fsArray.[i].[j] "Item values must be equal"
+                      if i <> j then
+                          Expect.equal nsArray.[i].[j + 1] fsArray.[i].[j] "Item values must be equal"
 
           testCase "Two common segment"
           <| fun _ ->
@@ -124,5 +124,5 @@ let tests =
 
               for i = 0 to itemCount - 1 do
                   for j = 0 to nsArray.[i].Length - 3 do
-                      if i <> j
-                      then Expect.equal nsArray.[i].[j + 2] fsArray.[i].[j] "Item values must be equal" ]
+                      if i <> j then
+                          Expect.equal nsArray.[i].[j + 2] fsArray.[i].[j] "Item values must be equal" ]

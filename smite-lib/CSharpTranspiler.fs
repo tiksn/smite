@@ -36,5 +36,6 @@ module CSharpTranspiler =
             CommonFeatures.getFilespaceDefinitions (models)
 
         filespaceDefinitions
-        |> Seq.collect (fun x ->
-            RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))
+        |> Seq.collect
+            (fun x ->
+                RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))

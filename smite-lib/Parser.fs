@@ -30,6 +30,7 @@ module Parser =
 
     let getOptionalSequenceNode (children: IDictionary<YamlNode, YamlNode>) name =
         let child = getOptionalChild children name
+
         match child with
         | Some x -> Some(getSequenceNode x)
         | None -> None
@@ -42,11 +43,15 @@ module Parser =
 
     let parseModelFieldNode (fieldNode: YamlMappingNode) =
         let nameValue =
-            getScalarNode(fieldNode.Children.[new YamlScalarNode("name")])
+            getScalarNode(
+                fieldNode.Children.[new YamlScalarNode("name")]
+            )
                 .Value
 
         let typeValue =
-            getScalarNode(fieldNode.Children.[new YamlScalarNode("type")])
+            getScalarNode(
+                fieldNode.Children.[new YamlScalarNode("type")]
+            )
                 .Value
 
         let typeNamespaceKey = new YamlScalarNode("namespace")
@@ -54,9 +59,10 @@ module Parser =
         let typeNamespace =
             match fieldNode.Children.ContainsKey(typeNamespaceKey) with
             | true ->
-                Some
-                    (getSequenceNode (fieldNode.Children.[typeNamespaceKey])
-                     |> getNamespaceStrings)
+                Some(
+                    getSequenceNode (fieldNode.Children.[typeNamespaceKey])
+                    |> getNamespaceStrings
+                )
             | false -> None
 
         let typeEnum =
@@ -75,9 +81,12 @@ module Parser =
         let isArrayValue =
             match fieldNode.Children.ContainsKey(isArrayKey) with
             | true ->
-                Some
-                    (getScalarNode(fieldNode.Children.[isArrayKey])
-                        .Value)
+                Some(
+                    getScalarNode(
+                        fieldNode.Children.[isArrayKey]
+                    )
+                        .Value
+                )
             | false -> None
 
         let isArray =
@@ -91,11 +100,15 @@ module Parser =
 
     let parseModelSequence (modelNode: YamlMappingNode) =
         let nameValue =
-            getScalarNode(modelNode.Children.[new YamlScalarNode("name")])
+            getScalarNode(
+                modelNode.Children.[new YamlScalarNode("name")]
+            )
                 .Value
 
         let fieldsNodeChildren =
-            getSequenceNode(modelNode.Children.[new YamlScalarNode("fields")])
+            getSequenceNode(
+                modelNode.Children.[new YamlScalarNode("fields")]
+            )
                 .Children
 
         let fields =
@@ -108,11 +121,15 @@ module Parser =
 
     let parseEnumerationSequence (modelNode: YamlMappingNode) =
         let nameValue =
-            getScalarNode(modelNode.Children.[new YamlScalarNode("name")])
+            getScalarNode(
+                modelNode.Children.[new YamlScalarNode("name")]
+            )
                 .Value
 
         let valuesNodeChildren =
-            getSequenceNode(modelNode.Children.[new YamlScalarNode("values")])
+            getSequenceNode(
+                modelNode.Children.[new YamlScalarNode("values")]
+            )
                 .Children
 
         let fields =
