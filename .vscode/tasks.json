@@ -4,6 +4,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "test",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "run",
+                "--project",
+                "./smite.tests/smite.tests.fsproj"
+            ],
+            "group": "test",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile",
+            "dependsOn": "build"
+        },
+        {
             "label": "build",
             "command": "dotnet",
             "type": "shell",
@@ -21,7 +37,13 @@
             "presentation": {
                 "reveal": "silent"
             },
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "dependsOn": "format"
+        },
+        {
+            "label": "format",
+            "command": "pwsh -Command ./FormatCode.ps1",
+            "type": "shell"
         }
     ]
 }
