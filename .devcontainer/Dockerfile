@@ -14,3 +14,20 @@ RUN if [ "$INSTALL_AZURE_CLI" = "true" ]; then bash /tmp/library-scripts/azcli-d
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
+
+# Update the list of packages
+RUN sudo apt-get update
+# Install pre-requisite packages.
+RUN sudo apt-get install -y wget apt-transport-https software-properties-common
+# Download the Microsoft repository GPG keys
+RUN wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+# Register the Microsoft repository GPG keys
+RUN sudo dpkg -i packages-microsoft-prod.deb
+# Update the list of products
+RUN sudo apt-get update
+# Enable the "universe" repositories
+RUN sudo add-apt-repository universe
+# Install PowerShell
+RUN sudo apt-get install -y powershell
+# Install Pester module
+RUN pwsh -c Install-Module -Name Pester -Force -AcceptLicense -Scope AllUsers
