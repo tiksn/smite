@@ -36,22 +36,34 @@ module RoslynTranspiler =
             | FieldKind.Field -> [ syntaxGenerator.FieldDeclaration(fieldDefinition.Name, t, Accessibility.Public) ]
             | FieldKind.Property ->
                 [ syntaxGenerator.FieldDeclaration(backfieldName, t, Accessibility.Private)
-                  syntaxGenerator.PropertyDeclaration
-                      (fieldDefinition.Name,
-                       t,
-                       Accessibility.Public,
-                       DeclarationModifiers.None,
-                       [ syntaxGenerator.ReturnStatement
-                           (syntaxGenerator.MemberAccessExpression
-                               (syntaxGenerator.ThisExpression(), syntaxGenerator.IdentifierName(backfieldName))) ],
-                       [ syntaxGenerator.AssignmentStatement
-                           (syntaxGenerator.MemberAccessExpression
-                               (syntaxGenerator.ThisExpression(), syntaxGenerator.IdentifierName(backfieldName)),
-                            syntaxGenerator.IdentifierName("value")) ]) ]
+                  syntaxGenerator.PropertyDeclaration(
+                      fieldDefinition.Name,
+                      t,
+                      Accessibility.Public,
+                      DeclarationModifiers.None,
+                      [ syntaxGenerator.ReturnStatement(
+                            syntaxGenerator.MemberAccessExpression(
+                                syntaxGenerator.ThisExpression(),
+                                syntaxGenerator.IdentifierName(backfieldName)
+                            )
+                        ) ],
+                      [ syntaxGenerator.AssignmentStatement(
+                            syntaxGenerator.MemberAccessExpression(
+                                syntaxGenerator.ThisExpression(),
+                                syntaxGenerator.IdentifierName(backfieldName)
+                            ),
+                            syntaxGenerator.IdentifierName("value")
+                        ) ]
+                  ) ]
 
         (ns, fd)
 
-    let generateFieldsCode (syntaxGenerator: SyntaxGenerator, fieldDefinitions: FieldDefinition [], fieldKind: FieldKind) =
+    let generateFieldsCode
+        (
+            syntaxGenerator: SyntaxGenerator,
+            fieldDefinitions: FieldDefinition [],
+            fieldKind: FieldKind
+        ) =
         fieldDefinitions
         |> Seq.map (fun x -> generateFieldCode (syntaxGenerator, x, fieldKind))
         |> Seq.toArray
@@ -71,8 +83,15 @@ module RoslynTranspiler =
             |> Seq.map (fun (o, _) -> o.Value)
 
         let syntaxNode =
-            syntaxGenerator.ClassDeclaration
-                (model.Name, null, Accessibility.Public, DeclarationModifiers.Partial, null, null, members)
+            syntaxGenerator.ClassDeclaration(
+                model.Name,
+                null,
+                Accessibility.Public,
+                DeclarationModifiers.Partial,
+                null,
+                null,
+                members
+            )
 
         (namespaces, syntaxNode)
 
@@ -82,14 +101,21 @@ module RoslynTranspiler =
             |> Seq.map (fun x -> syntaxGenerator.EnumMember(x))
 
         let syntaxNode =
-            syntaxGenerator.EnumDeclaration
-                (enumeration.Name, Accessibility.Public, DeclarationModifiers.None, enumMemberNodes)
+            syntaxGenerator.EnumDeclaration(
+                enumeration.Name,
+                Accessibility.Public,
+                DeclarationModifiers.None,
+                enumMemberNodes
+            )
 
         (Seq.empty, syntaxNode)
 
-    let generateNamespaceDeclaration (syntaxGenerator: SyntaxGenerator,
-                                      ns: string [],
-                                      generateTypeDeclaration: SyntaxGenerator -> (seq<string []> * SyntaxNode)) =
+    let generateNamespaceDeclaration
+        (
+            syntaxGenerator: SyntaxGenerator,
+            ns: string [],
+            generateTypeDeclaration: SyntaxGenerator -> (seq<string []> * SyntaxNode)
+        ) =
         let nsString =
             CommonFeatures.composeDotSeparatedNamespace (ns)
 
@@ -101,10 +127,13 @@ module RoslynTranspiler =
 
         (namespaces, syntaxNode)
 
-    let generateTypeSourceFileCode (syntaxGenerator: SyntaxGenerator,
-                                    ns: string [],
-                                    comments: string,
-                                    generateTypeDeclaration) =
+    let generateTypeSourceFileCode
+        (
+            syntaxGenerator: SyntaxGenerator,
+            ns: string [],
+            comments: string,
+            generateTypeDeclaration
+        ) =
         let namespaces, namespaceDeclaration =
             generateNamespaceDeclaration (syntaxGenerator, ns, generateTypeDeclaration)
 
@@ -127,13 +156,16 @@ module RoslynTranspiler =
         + Environment.NewLine
         + newNode.ToString()
 
-    let transpileModelDefinition (syntaxGenerator: SyntaxGenerator,
-                                  fileExtension: string,
-                                  ns: string [],
-                                  fs: string [],
-                                  model: ModelDefinition,
-                                  fieldKind: FieldKind,
-                                  comments: string) =
+    let transpileModelDefinition
+        (
+            syntaxGenerator: SyntaxGenerator,
+            fileExtension: string,
+            ns: string [],
+            fs: string [],
+            model: ModelDefinition,
+            fieldKind: FieldKind,
+            comments: string
+        ) =
         let sourceFileName = model.Name + fileExtension
         let relativeFilePath = Array.append fs [| sourceFileName |]
         let generateTypeDeclaration = generateClassDeclaration model fieldKind
@@ -141,12 +173,15 @@ module RoslynTranspiler =
         { RelativeFilePath = relativeFilePath
           FileContent = generateTypeSourceFileCode (syntaxGenerator, ns, comments, generateTypeDeclaration) }
 
-    let transpileEnumerationDefinition (syntaxGenerator: SyntaxGenerator,
-                                        fileExtension: string,
-                                        ns: string [],
-                                        fs: string [],
-                                        enumeration: EnumerationDefinition,
-                                        comments: string) =
+    let transpileEnumerationDefinition
+        (
+            syntaxGenerator: SyntaxGenerator,
+            fileExtension: string,
+            ns: string [],
+            fs: string [],
+            enumeration: EnumerationDefinition,
+            comments: string
+        ) =
         let sourceFileName = enumeration.Name + fileExtension
         let relativeFilePath = Array.append fs [| sourceFileName |]
 
@@ -156,33 +191,40 @@ module RoslynTranspiler =
         { RelativeFilePath = relativeFilePath
           FileContent = generateTypeSourceFileCode (syntaxGenerator, ns, comments, generateTypeDeclaration) }
 
-    let transpileFilespaceDefinition (syntaxGenerator: SyntaxGenerator,
-                                      fileExtension: string,
-                                      filespaceDefinition: SingleNamespaceFilespaceDefinition,
-                                      fieldKind: FieldKind,
-                                      comments: string) =
+    let transpileFilespaceDefinition
+        (
+            syntaxGenerator: SyntaxGenerator,
+            fileExtension: string,
+            filespaceDefinition: SingleNamespaceFilespaceDefinition,
+            fieldKind: FieldKind,
+            comments: string
+        ) =
         let modelsFiles =
             filespaceDefinition.Models
-            |> Seq.map (fun x ->
-                transpileModelDefinition
-                    (syntaxGenerator,
-                     fileExtension,
-                     filespaceDefinition.Namespace,
-                     filespaceDefinition.Filespace,
-                     x,
-                     fieldKind,
-                     comments))
+            |> Seq.map
+                (fun x ->
+                    transpileModelDefinition (
+                        syntaxGenerator,
+                        fileExtension,
+                        filespaceDefinition.Namespace,
+                        filespaceDefinition.Filespace,
+                        x,
+                        fieldKind,
+                        comments
+                    ))
 
         let enumerationsFiles =
             filespaceDefinition.Enumerations
-            |> Seq.map (fun x ->
-                transpileEnumerationDefinition
-                    (syntaxGenerator,
-                     fileExtension,
-                     filespaceDefinition.Namespace,
-                     filespaceDefinition.Filespace,
-                     x,
-                     comments))
+            |> Seq.map
+                (fun x ->
+                    transpileEnumerationDefinition (
+                        syntaxGenerator,
+                        fileExtension,
+                        filespaceDefinition.Namespace,
+                        filespaceDefinition.Filespace,
+                        x,
+                        comments
+                    ))
 
         Seq.concat [ modelsFiles
                      enumerationsFiles ]
