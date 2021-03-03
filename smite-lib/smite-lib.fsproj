@@ -22,7 +22,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.8.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.8.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.9.0" />
     <PackageReference Include="TIKSN-Framework" Version="4.0.0" />
     <PackageReference Include="YamlDotNet" Version="9.1.4" />
   </ItemGroup>
