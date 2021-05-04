@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <PackageReference Include="Argu" Version="6.1.1" />
-    <PackageReference Include="TIKSN-Framework" Version="4.0.0" />
+    <PackageReference Include="TIKSN-Framework" Version="4.1.0" />
     <PackageReference Include="YamlDotNet" Version="11.1.1" />
   </ItemGroup>
 
