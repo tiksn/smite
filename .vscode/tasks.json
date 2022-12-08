@@ -38,11 +38,29 @@
                 "reveal": "silent"
             },
             "problemMatcher": "$msCompile",
-            "dependsOn": "format"
+            "dependsOn": [
+                "format",
+                "restore",
+                "restore_tool"
+            ]
         },
         {
             "label": "format",
             "command": "pwsh -Command ./FormatCode.ps1",
+            "type": "shell",
+            "dependsOn": [
+                "restore",
+                "restore_tool"
+            ]
+        },
+        {
+            "label": "restore_tool",
+            "command": "dotnet tool restore",
+            "type": "shell"
+        },
+        {
+            "label": "restore",
+            "command": "dotnet restore",
             "type": "shell"
         }
     ]
