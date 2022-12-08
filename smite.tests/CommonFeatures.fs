@@ -12,7 +12,8 @@ let tests =
               let modelsArray = [||]
 
               let nsd =
-                  seq [ { Namespace = [| "Microsoft"; "Graph" |]
+                  seq
+                      [ { Namespace = [| "Microsoft"; "Graph" |]
                           Models = modelsArray
                           Enumerations = [||] }
                         { Namespace = [| "System"; "Collections"; "Generic" |]
@@ -22,20 +23,13 @@ let tests =
                           Models = modelsArray
                           Enumerations = [||] } ]
 
-              let subject =
-                  CommonFeatures.getFilespaceDefinitions (nsd)
+              let subject = CommonFeatures.getFilespaceDefinitions (nsd)
 
               Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
 
-              let nsArray =
-                  nsd
-                  |> Seq.map (fun x -> x.Namespace)
-                  |> Seq.toArray
+              let nsArray = nsd |> Seq.map (fun x -> x.Namespace) |> Seq.toArray
 
-              let fsArray =
-                  subject
-                  |> Seq.map (fun x -> x.Filespace)
-                  |> Seq.toArray
+              let fsArray = subject |> Seq.map (fun x -> x.Filespace) |> Seq.toArray
 
               let itemCount = nsArray.Length
 
@@ -49,7 +43,8 @@ let tests =
               let modelsArray = [||]
 
               let nsd =
-                  seq [ { Namespace = [| "System" |]
+                  seq
+                      [ { Namespace = [| "System" |]
                           Models = modelsArray
                           Enumerations = [||] }
                         { Namespace = [| "System"; "Collections" |]
@@ -58,27 +53,17 @@ let tests =
                         { Namespace = [| "System"; "Collections"; "Generic" |]
                           Models = modelsArray
                           Enumerations = [||] }
-                        { Namespace =
-                              [| "System"
-                                 "Collections"
-                                 "Specialized " |]
+                        { Namespace = [| "System"; "Collections"; "Specialized " |]
                           Models = modelsArray
                           Enumerations = [||] } ]
 
-              let subject =
-                  CommonFeatures.getFilespaceDefinitions (nsd)
+              let subject = CommonFeatures.getFilespaceDefinitions (nsd)
 
               Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
 
-              let nsArray =
-                  nsd
-                  |> Seq.map (fun x -> x.Namespace)
-                  |> Seq.toArray
+              let nsArray = nsd |> Seq.map (fun x -> x.Namespace) |> Seq.toArray
 
-              let fsArray =
-                  subject
-                  |> Seq.map (fun x -> x.Filespace)
-                  |> Seq.toArray
+              let fsArray = subject |> Seq.map (fun x -> x.Filespace) |> Seq.toArray
 
               let itemCount = nsArray.Length
 
@@ -92,33 +77,24 @@ let tests =
               let modelsArray = [||]
 
               let nsd =
-                  seq [ { Namespace = [| "System"; "Collections" |]
+                  seq
+                      [ { Namespace = [| "System"; "Collections" |]
                           Models = modelsArray
                           Enumerations = [||] }
                         { Namespace = [| "System"; "Collections"; "Generic" |]
                           Models = modelsArray
                           Enumerations = [||] }
-                        { Namespace =
-                              [| "System"
-                                 "Collections"
-                                 "Specialized " |]
+                        { Namespace = [| "System"; "Collections"; "Specialized " |]
                           Models = modelsArray
                           Enumerations = [||] } ]
 
-              let subject =
-                  CommonFeatures.getFilespaceDefinitions (nsd)
+              let subject = CommonFeatures.getFilespaceDefinitions (nsd)
 
               Expect.equal (nsd |> Seq.length) (subject |> Seq.length) "Count must be equal"
 
-              let nsArray =
-                  nsd
-                  |> Seq.map (fun x -> x.Namespace)
-                  |> Seq.toArray
+              let nsArray = nsd |> Seq.map (fun x -> x.Namespace) |> Seq.toArray
 
-              let fsArray =
-                  subject
-                  |> Seq.map (fun x -> x.Filespace)
-                  |> Seq.toArray
+              let fsArray = subject |> Seq.map (fun x -> x.Filespace) |> Seq.toArray
 
               let itemCount = nsArray.Length
 

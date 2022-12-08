@@ -1,9 +1,10 @@
 open Argu
-open TIKSN.smite.cli
 open TIKSN.Time
 open Microsoft.Extensions.DependencyInjection
 open System.IO
 open TIKSN.smite.lib
+open Microsoft.Extensions.Hosting
+open TIKSN.DependencyInjection
 
 type SupportedProgrammingLanguage =
     | FSharp = 1
@@ -26,34 +27,29 @@ type CLIArguments =
             | Field _ -> "Filed structure kind"
 
 [<EntryPoint>]
-let main argv =
-    let configurationRootSetup = new ConfigurationRootSetup()
+let main args =
 
-    let configurationRoot =
-        configurationRootSetup.GetConfigurationRoot()
+    let builder =
+        Host
+            .CreateDefaultBuilder()
+            .ConfigureServices(fun hostContext services -> services.AddFrameworkPlatform() |> ignore)
 
-    let compositionRootSetup =
-        new CompositionRootSetup(configurationRoot)
+    let app = builder.Build()
 
-    let serviceProvider =
-        compositionRootSetup.CreateServiceProvider()
+    let serviceProvider = app.Services
 
-    let timeProvider =
-        serviceProvider.GetRequiredService<ITimeProvider>()
+    let timeProvider = serviceProvider.GetRequiredService<ITimeProvider>()
 
-    let parser =
-        ArgumentParser.Create<CLIArguments>(programName = "smite")
+    let parser = ArgumentParser.Create<CLIArguments>(programName = "smite")
 
     try
-        let results =
-            parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
+        let results = parser.ParseCommandLine(inputs = args, raiseOnUsage = true)
 
         let inputFilePath = results.GetResult(Input_File)
         let outputFolderPath = results.GetResult(Output_Folder)
         let lang = results.GetResult(Lang)
 
-        let field =
-            results.GetResult(Field, FieldKind.Field)
+        let field = results.GetResult(Field, FieldKind.Field)
 
         let langName = lang.ToString()
         let inputFileAbsolutePath = Path.GetFullPath(inputFilePath)

@@ -32,10 +32,8 @@ module CSharpTranspiler =
         let syntaxGenerator =
             SyntaxGenerator.GetGenerator(new AdhocWorkspace(), LanguageNames.CSharp)
 
-        let filespaceDefinitions =
-            CommonFeatures.getFilespaceDefinitions (models)
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (models)
 
         filespaceDefinitions
-        |> Seq.collect
-            (fun x ->
-                RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))
+        |> Seq.collect (fun x ->
+            RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))

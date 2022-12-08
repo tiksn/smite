@@ -12,10 +12,9 @@ module VisualBasicTranspiler =
     let getLeadingFileComments (timeProvider: ITimeProvider) =
         let lines =
             CommonFeatures.getFileComment (timeProvider)
-            |> List.map
-                (fun x ->
-                    { LineIndentCount = 0
-                      LineContent = "' " + x })
+            |> List.map (fun x ->
+                { LineIndentCount = 0
+                  LineContent = "' " + x })
 
         convertIndentedLinesToString (lines, indentSpaces)
 
@@ -25,10 +24,8 @@ module VisualBasicTranspiler =
         let syntaxGenerator =
             SyntaxGenerator.GetGenerator(new AdhocWorkspace(), LanguageNames.VisualBasic)
 
-        let filespaceDefinitions =
-            CommonFeatures.getFilespaceDefinitions (models)
+        let filespaceDefinitions = CommonFeatures.getFilespaceDefinitions (models)
 
         filespaceDefinitions
-        |> Seq.collect
-            (fun x ->
-                RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))
+        |> Seq.collect (fun x ->
+            RoslynTranspiler.transpileFilespaceDefinition (syntaxGenerator, fileExtension, x, fieldKind, comments))

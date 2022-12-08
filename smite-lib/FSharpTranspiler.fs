@@ -20,8 +20,7 @@ module FSharpTranspiler =
             CommonFeatures.getFileComment (timeProvider)
             |> List.map (fun x -> { LineIndentCount = 0; LineContent = x })
 
-        firstLines
-        @ middleLines @ lastLines @ [ emptyLine ]
+        firstLines @ middleLines @ lastLines @ [ emptyLine ]
 
     let getSpecialType (t: PrimitiveType) =
         match t with
@@ -47,10 +46,8 @@ module FSharpTranspiler =
 
         (ns, line)
 
-    let generateFieldsCode (fieldDefinitions: FieldDefinition []) =
-        fieldDefinitions
-        |> Seq.map (fun x -> generateFieldCode (x))
-        |> Seq.toList
+    let generateFieldsCode (fieldDefinitions: FieldDefinition[]) =
+        fieldDefinitions |> Seq.map (fun x -> generateFieldCode (x)) |> Seq.toList
 
     let generateClassDeclaration (model: ModelDefinition) =
         let firstLine =
@@ -63,17 +60,12 @@ module FSharpTranspiler =
 
         let fields = generateFieldsCode (model.Fields)
 
-        let members =
-            fields |> Seq.map (fun (_, f) -> f) |> Seq.toList
+        let members = fields |> Seq.map (fun (_, f) -> f) |> Seq.toList
 
         let namespaces =
-            fields
-            |> Seq.filter (fun (o, _) -> o.IsSome)
-            |> Seq.map (fun (o, _) -> o.Value)
+            fields |> Seq.filter (fun (o, _) -> o.IsSome) |> Seq.map (fun (o, _) -> o.Value)
 
-        let lines =
-            [ emptyLine; firstLine ]
-            @ members @ [ lastLine; emptyLine ]
+        let lines = [ emptyLine; firstLine ] @ members @ [ lastLine; emptyLine ]
 
         (namespaces, lines)
 
@@ -84,19 +76,16 @@ module FSharpTranspiler =
 
         let members =
             enumeration.Values
-            |> Seq.mapi
-                (fun i v ->
-                    { LineIndentCount = 1
-                      LineContent = "| " + v + " = " + i.ToString() })
+            |> Seq.mapi (fun i v ->
+                { LineIndentCount = 1
+                  LineContent = "| " + v + " = " + i.ToString() })
             |> Seq.toList
 
         [ emptyLine; firstLine ] @ members @ [ emptyLine ]
 
-    let generateClassDeclarations (models: ModelDefinition []) =
+    let generateClassDeclarations (models: ModelDefinition[]) =
         let namespaces =
-            models
-            |> Seq.map generateClassDeclaration
-            |> Seq.collect (fun (x, _) -> x)
+            models |> Seq.map generateClassDeclaration |> Seq.collect (fun (x, _) -> x)
 
         let lines =
             models
@@ -106,7 +95,7 @@ module FSharpTranspiler =
 
         (namespaces, lines)
 
-    let generateEnumerationDeclarations (enumerations: EnumerationDefinition []) =
+    let generateEnumerationDeclarations (enumerations: EnumerationDefinition[]) =
         enumerations
         |> Seq.map generateEnumerationDeclaration
         |> Seq.collect (fun x -> x)
@@ -114,19 +103,17 @@ module FSharpTranspiler =
 
     let generateSourceFileCode
         (
-            ns: string [],
+            ns: string[],
             moduleName: string,
-            models: ModelDefinition [],
-            enumerations: EnumerationDefinition [],
+            models: ModelDefinition[],
+            enumerations: EnumerationDefinition[],
             comments: IndentedLine list
         ) =
-        let nsString =
-            CommonFeatures.composeDotSeparatedNamespace (ns)
+        let nsString = CommonFeatures.composeDotSeparatedNamespace (ns)
 
         let namespaces, modelsLines = generateClassDeclarations models
 
-        let enumerationsLines =
-            generateEnumerationDeclarations enumerations
+        let enumerationsLines = generateEnumerationDeclarations enumerations
 
         let directives =
             [ { LineIndentCount = 0
@@ -139,16 +126,13 @@ module FSharpTranspiler =
             namespaces
             |> Seq.distinct
             |> Seq.map CommonFeatures.composeDotSeparatedNamespace
-            |> Seq.map
-                (fun x ->
-                    { LineIndentCount = 1
-                      LineContent = "open " + x })
+            |> Seq.map (fun x ->
+                { LineIndentCount = 1
+                  LineContent = "open " + x })
             |> Seq.toList
 
         let sourceFileLines =
-            comments
-            @ directives
-              @ usings @ enumerationsLines @ modelsLines
+            comments @ directives @ usings @ enumerationsLines @ modelsLines
 
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
@@ -160,8 +144,7 @@ module FSharpTranspiler =
         let filePath =
             CommonFeatures.getFilePathWithExtension (filespaceDefinition, fileExtension)
 
-        let moduleName =
-            filespaceDefinition.Filespace |> Seq.last
+        let moduleName = filespaceDefinition.Filespace |> Seq.last
 
         let sourceFileCode =
             generateSourceFileCode (
