@@ -13,7 +13,7 @@ type FieldKind =
 type FieldType =
     | PrimitiveType of PrimitiveType
     | ComplexTypeSameNamespace of string
-    | ComplexTypeDifferentNamespace of string [] * string
+    | ComplexTypeDifferentNamespace of string[] * string
 
 type FieldDefinition =
     { Name: string
@@ -22,25 +22,25 @@ type FieldDefinition =
 
 type ModelDefinition =
     { Name: string
-      Fields: FieldDefinition [] }
+      Fields: FieldDefinition[] }
 
-type EnumerationDefinition = { Name: string; Values: string [] }
+type EnumerationDefinition = { Name: string; Values: string[] }
 
 type NamespaceDefinition =
-    { Namespace: string []
-      Models: ModelDefinition []
-      Enumerations: EnumerationDefinition [] }
+    { Namespace: string[]
+      Models: ModelDefinition[]
+      Enumerations: EnumerationDefinition[] }
 
 type SingleNamespaceFilespaceDefinition =
-    { Namespace: string []
-      Filespace: string []
-      Models: ModelDefinition []
-      Enumerations: EnumerationDefinition [] }
+    { Namespace: string[]
+      Filespace: string[]
+      Models: ModelDefinition[]
+      Enumerations: EnumerationDefinition[] }
 
 type MultiNamespaceFilespaceDefinition =
-    { Filespace: string []
-      Namespaces: NamespaceDefinition [] }
+    { Filespace: string[]
+      Namespaces: NamespaceDefinition[] }
 
 type SourceFile =
-    { RelativeFilePath: string []
+    { RelativeFilePath: string[]
       FileContent: string }
