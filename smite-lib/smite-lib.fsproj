@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="4.4.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="4.5.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.5.0" />
     <PackageReference Include="TIKSN-Framework" Version="4.3.3" />
     <PackageReference Include="YamlDotNet" Version="13.0.1" />
