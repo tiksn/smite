@@ -14,7 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Expecto" Version="9.0.4" />
     <PackageReference Include="FSharp.Core" Version="7.0.300" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.1" />
   </ItemGroup>
 
   <ItemGroup>
