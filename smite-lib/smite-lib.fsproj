@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.6.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="4.7.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.7.0" />
