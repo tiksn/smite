@@ -1,1 +1,1 @@
-dotnet fantomas . --recurse
+dotnet fantomas .
