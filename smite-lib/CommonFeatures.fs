@@ -2,10 +2,9 @@ namespace TIKSN.smite.lib
 
 module CommonFeatures =
     open System
-    open TIKSN.Time
 
-    let getFileComment (timeProvider: ITimeProvider) =
-        let time = timeProvider.GetCurrentTime().ToString("D")
+    let getFileComment (timeProvider: TimeProvider) =
+        let time = timeProvider.GetUtcNow().ToString("D")
 
         [ "This file is auto-generated"
           "Please do not make manual changes"
