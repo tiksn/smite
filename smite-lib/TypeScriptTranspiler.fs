@@ -151,11 +151,8 @@ module TypeScriptTranspiler =
               LineContent = "import { " + x + " } from \"./" + x + "\"" })
 
     let generateSourceFileCode
-        (
-            filespaceDefinition: MultiNamespaceFilespaceDefinition,
-            getFilespaces,
-            comments: IndentedLine list
-        ) =
+        (filespaceDefinition: MultiNamespaceFilespaceDefinition, getFilespaces, comments: IndentedLine list)
+        =
         let usings =
             filespaceDefinition.Namespaces
             |> Seq.map (fun x -> generateSourceFileCodePerNamespace (x, getFilespaces))
@@ -178,11 +175,8 @@ module TypeScriptTranspiler =
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition
-        (
-            filespaceDefinition: MultiNamespaceFilespaceDefinition,
-            getFilespaces,
-            comments: IndentedLine list
-        ) =
+        (filespaceDefinition: MultiNamespaceFilespaceDefinition, getFilespaces, comments: IndentedLine list)
+        =
         let filePath =
             CommonFeatures.getFilePathWithExtensionForMultiNamespace (filespaceDefinition, fileExtension)
 
