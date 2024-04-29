@@ -1,15 +1,16 @@
 namespace TIKSN.smite.lib
 
+open System
+
 module VisualBasicTranspiler =
     open Microsoft.CodeAnalysis.Editing
     open Microsoft.CodeAnalysis
-    open TIKSN.Time
     open IndentationFeatures
 
     let fileExtension = ".vb"
     let indentSpaces = 4
 
-    let getLeadingFileComments (timeProvider: ITimeProvider) =
+    let getLeadingFileComments (timeProvider: TimeProvider) =
         let lines =
             CommonFeatures.getFileComment (timeProvider)
             |> List.map (fun x ->
@@ -18,7 +19,7 @@ module VisualBasicTranspiler =
 
         convertIndentedLinesToString (lines, indentSpaces)
 
-    let transpile (models: seq<NamespaceDefinition>, fieldKind: FieldKind, timeProvider: ITimeProvider) =
+    let transpile (models: seq<NamespaceDefinition>, fieldKind: FieldKind, timeProvider: TimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
 
         let syntaxGenerator =

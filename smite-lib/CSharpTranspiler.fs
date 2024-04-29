@@ -1,16 +1,17 @@
 namespace TIKSN.smite.lib
 
+open System
+
 module CSharpTranspiler =
     open TIKSN.smite.lib
     open Microsoft.CodeAnalysis
     open Microsoft.CodeAnalysis.Editing
-    open TIKSN.Time
     open IndentationFeatures
 
     let fileExtension = ".cs"
     let indentSpaces = 4
 
-    let getLeadingFileComments (timeProvider: ITimeProvider) =
+    let getLeadingFileComments (timeProvider: TimeProvider) =
         let firstLines =
             [ { LineIndentCount = 0
                 LineContent = "/*" } ]
@@ -26,7 +27,7 @@ module CSharpTranspiler =
         let lines = firstLines @ middleLines @ lastLines
         convertIndentedLinesToString (lines, indentSpaces)
 
-    let transpile (models: seq<NamespaceDefinition>, fieldKind: FieldKind, timeProvider: ITimeProvider) =
+    let transpile (models: seq<NamespaceDefinition>, fieldKind: FieldKind, timeProvider: TimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
 
         let syntaxGenerator =

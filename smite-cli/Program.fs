@@ -1,8 +1,8 @@
+open System
 open Argu
-open TIKSN.Time
-open Microsoft.Extensions.DependencyInjection
 open System.IO
 open TIKSN.smite.lib
+open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open TIKSN.DependencyInjection
 
@@ -32,13 +32,13 @@ let main args =
     let builder =
         Host
             .CreateDefaultBuilder()
-            .ConfigureServices(fun hostContext services -> services.AddFrameworkPlatform() |> ignore)
+            .ConfigureServices(fun hostContext services -> services.AddFrameworkCore() |> ignore)
 
     let app = builder.Build()
 
     let serviceProvider = app.Services
 
-    let timeProvider = serviceProvider.GetRequiredService<ITimeProvider>()
+    let timeProvider = serviceProvider.GetRequiredService<TimeProvider>()
 
     let parser = ArgumentParser.Create<CLIArguments>(programName = "smite")
 

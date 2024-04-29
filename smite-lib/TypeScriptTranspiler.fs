@@ -1,13 +1,14 @@
 namespace TIKSN.smite.lib
 
+open System
+
 module TypeScriptTranspiler =
     open IndentationFeatures
-    open TIKSN.Time
 
     let fileExtension = ".ts"
     let indentSpaces = 4
 
-    let getLeadingFileComments (timeProvider: ITimeProvider) =
+    let getLeadingFileComments (timeProvider: TimeProvider) =
         let firstLines =
             [ { LineIndentCount = 0
                 LineContent = "/*" } ]
@@ -191,7 +192,7 @@ module TypeScriptTranspiler =
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
+    let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: TimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
 
         let filespaceDefinitions =

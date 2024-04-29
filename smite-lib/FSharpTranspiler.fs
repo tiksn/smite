@@ -1,13 +1,14 @@
 namespace TIKSN.smite.lib
 
+open System
+
 module FSharpTranspiler =
     open IndentationFeatures
-    open TIKSN.Time
 
     let fileExtension = ".fs"
     let indentSpaces = 4
 
-    let getLeadingFileComments (timeProvider: ITimeProvider) =
+    let getLeadingFileComments (timeProvider: TimeProvider) =
         let firstLines =
             [ { LineIndentCount = 0
                 LineContent = "(*" } ]
@@ -158,7 +159,7 @@ module FSharpTranspiler =
         { RelativeFilePath = filePath
           FileContent = sourceFileCode }
 
-    let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: ITimeProvider) =
+    let transpile (namespaceDefinitions: seq<NamespaceDefinition>, timeProvider: TimeProvider) =
         let comments = getLeadingFileComments (timeProvider)
 
         let filespaceDefinitions =
