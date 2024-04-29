@@ -58,11 +58,8 @@ module RoslynTranspiler =
         (ns, fd)
 
     let generateFieldsCode
-        (
-            syntaxGenerator: SyntaxGenerator,
-            fieldDefinitions: FieldDefinition[],
-            fieldKind: FieldKind
-        ) =
+        (syntaxGenerator: SyntaxGenerator, fieldDefinitions: FieldDefinition[], fieldKind: FieldKind)
+        =
         fieldDefinitions
         |> Seq.map (fun x -> generateFieldCode (syntaxGenerator, x, fieldKind))
         |> Seq.toArray
@@ -117,12 +114,8 @@ module RoslynTranspiler =
         (namespaces, syntaxNode)
 
     let generateTypeSourceFileCode
-        (
-            syntaxGenerator: SyntaxGenerator,
-            ns: string[],
-            comments: string,
-            generateTypeDeclaration
-        ) =
+        (syntaxGenerator: SyntaxGenerator, ns: string[], comments: string, generateTypeDeclaration)
+        =
         let namespaces, namespaceDeclaration =
             generateNamespaceDeclaration (syntaxGenerator, ns, generateTypeDeclaration)
 
