@@ -76,10 +76,8 @@ module CommonFeatures =
         filespacesWithExtension |> List.toArray
 
     let getFilePathWithExtensionForMultiNamespace
-        (
-            filespaceDefinition: MultiNamespaceFilespaceDefinition,
-            fileExtension
-        ) =
+        (filespaceDefinition: MultiNamespaceFilespaceDefinition, fileExtension)
+        =
         let filespacesWithExtension =
             getFilespacesWithExtension ((filespaceDefinition.Filespace |> Array.toList), fileExtension)
 
