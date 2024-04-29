@@ -138,10 +138,8 @@ module FSharpTranspiler =
         convertIndentedLinesToString (sourceFileLines, indentSpaces)
 
     let transpileFilespaceDefinition
-        (
-            filespaceDefinition: SingleNamespaceFilespaceDefinition,
-            comments: IndentedLine list
-        ) =
+        (filespaceDefinition: SingleNamespaceFilespaceDefinition, comments: IndentedLine list)
+        =
         let filePath =
             CommonFeatures.getFilePathWithExtension (filespaceDefinition, fileExtension)
 
