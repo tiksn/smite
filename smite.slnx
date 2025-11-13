@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="smite-cli/smite-cli.fsproj" />
+  <Project Path="smite-lib/smite-lib.fsproj" />
+  <Project Path="smite.tests/smite.tests.fsproj" />
+</Solution>
