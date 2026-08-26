@@ -23,9 +23,9 @@
 
   <ItemGroup>
     <PackageReference Include="Argu" Version="6.2.5" />
-    <PackageReference Include="TIKSN-Framework" Version="5.7.3" />
+    <PackageReference Include="TIKSN-Framework" Version="5.8.0" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.11" />
     <PackageReference Update="FSharp.Core" Version="10.1.400" />
   </ItemGroup>
 
