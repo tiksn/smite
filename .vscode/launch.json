@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
@@ -20,7 +20,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--help"
             ],
@@ -33,7 +33,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "csharp",
@@ -53,7 +53,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "csharp",
@@ -73,7 +73,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "fsharp",
@@ -93,7 +93,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "fsharp",
@@ -113,7 +113,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "typescript",
@@ -133,7 +133,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "typescript",
@@ -153,7 +153,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "visualbasic",
@@ -173,7 +173,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/smite-cli/bin/Debug/net5.0/smite-cli.dll",
+            "program": "${workspaceFolder}/smite-cli/bin/Debug/net11.0/smite-cli.dll",
             "args": [
                 "--lang",
                 "visualbasic",
